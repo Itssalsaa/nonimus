@@ -9101,7 +9101,7 @@ function Chloex:Window(guiconfig)
 				local function maxtextwidth()
 					local listw = list.AbsoluteSize.X / uistate.scale - 24
 					local avail = math.min(listw - AV - 8, listw * 0.78)
-					return math.max(90, math.floor(avail) - 26)
+					return math.max(90, math.floor(avail) - 30)
 				end
 				local tobottomref = nil
 				local function applymax()
@@ -9241,8 +9241,8 @@ function Chloex:Window(guiconfig)
 						av.Image = "rbxthumb://type=AvatarHeadShot&id=" .. uid .. "&w=150&h=150"
 						instance.uicorner(av).CornerRadius = UDim.new(1, 0)
 						local avstroke = instance.uistroke(av)
-						avstroke.Color = mine and theme.Accent or C_LINE
-						avstroke.Transparency = mine and 0.45 or 0
+						avstroke.Color = mine and theme.Accent or namecolor(uid)
+						avstroke.Transparency = mine and 0.35 or 0.45
 						avstroke.Thickness = 1.5
 					else
 						local spacer = instance.frame(row)
@@ -9257,27 +9257,30 @@ function Chloex:Window(guiconfig)
 					bubble.LayoutOrder = mine and 1 or 2
 					bubble.AutomaticSize = Enum.AutomaticSize.XY
 					bubble.Size = UDim2.new(0, 0, 0, 0)
-					bubble.BackgroundColor3 = mine and C_MINE or C_OTHER
+					bubble.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 					bubble.BackgroundTransparency = 0
 					bubble.BorderSizePixel = 0
 					bubble.Text = ""
 					bubble.TextSize = 1
 					bubble.AutoButtonColor = false
-					instance.uicorner(bubble).CornerRadius = UDim.new(0, 15)
-					if not mine then
-						local bstroke = instance.uistroke(bubble)
-						bstroke.Color = Color3.fromRGB(50, 50, 57)
-						bstroke.Thickness = 1
-						bstroke.Transparency = 0.35
-						bstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-					end
+					instance.uicorner(bubble).CornerRadius = UDim.new(0, 16)
+					local bgrad = instance.uigradient(bubble)
+					bgrad.Rotation = 90
+					bgrad.Color = mine
+							and ColorSequence.new(Color3.fromRGB(236, 236, 242), Color3.fromRGB(186, 186, 198))
+						or ColorSequence.new(Color3.fromRGB(46, 46, 54), Color3.fromRGB(32, 32, 38))
+					local bstroke = instance.uistroke(bubble)
+					bstroke.Color = mine and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(70, 70, 80)
+					bstroke.Thickness = 1
+					bstroke.Transparency = mine and 0.75 or 0.45
+					bstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 					local bp = instance.uipadding(bubble)
-					bp.PaddingLeft = UDim.new(0, 13)
-					bp.PaddingRight = UDim.new(0, 13)
-					bp.PaddingTop = UDim.new(0, 7)
-					bp.PaddingBottom = UDim.new(0, 7)
+					bp.PaddingLeft = UDim.new(0, 14)
+					bp.PaddingRight = UDim.new(0, 14)
+					bp.PaddingTop = UDim.new(0, 8)
+					bp.PaddingBottom = UDim.new(0, 8)
 					local bl = instance.uilistlayout(bubble)
-					bl.Padding = UDim.new(0, 3)
+					bl.Padding = UDim.new(0, 4)
 					bl.SortOrder = Enum.SortOrder.LayoutOrder
 					if first and not mine then
 						local nm = instance.textlabel(bubble)
@@ -9301,9 +9304,9 @@ function Chloex:Window(guiconfig)
 						q.AutomaticSize = Enum.AutomaticSize.XY
 						q.Size = UDim2.new(0, 0, 0, 0)
 						q.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-						q.BackgroundTransparency = mine and 0.88 or 0.5
+						q.BackgroundTransparency = mine and 0.82 or 0.4
 						q.BorderSizePixel = 0
-						instance.uicorner(q).CornerRadius = UDim.new(0, 8)
+						instance.uicorner(q).CornerRadius = UDim.new(0, 10)
 						local qp = instance.uipadding(q)
 						qp.PaddingLeft = UDim.new(0, 12)
 						qp.PaddingRight = UDim.new(0, 9)
@@ -9341,7 +9344,7 @@ function Chloex:Window(guiconfig)
 					body.FontFace = CF
 					body.RichText = true
 					body.TextWrapped = true
-					body.TextSize = 13
+					body.TextSize = 14
 					body.TextColor3 = mine and C_MINE_TEXT or theme.Text
 					body.TextXAlignment = Enum.TextXAlignment.Left
 					body.AutomaticSize = Enum.AutomaticSize.XY
@@ -9410,6 +9413,15 @@ function Chloex:Window(guiconfig)
 						rows[1]:Destroy()
 					end
 					empty.Visible = false
+					bubble.BackgroundTransparency = 1
+					local fi = TweenInfo.new(0.28, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+					sv.ts:Create(bubble, fi, { BackgroundTransparency = 0 }):Play()
+					for _, d in ipairs(bubble:GetDescendants()) do
+						if d:IsA("TextLabel") then
+							d.TextTransparency = 1
+							sv.ts:Create(d, fi, { TextTransparency = 0 }):Play()
+						end
+					end
 					return mine
 				end
 				-- polling

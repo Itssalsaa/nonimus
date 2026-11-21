@@ -2605,7 +2605,34 @@ function Chloex:Window(guiconfig)
 		label.Text = pillconfig.Text or ""
 		label.TextColor3 = pillconfig.Color or theme.SubText
 		label.TextSize = 7
-		return pill, label, icon
+		local padx = pillconfig.Button and 8 or 4
+		local function applyfit(textw)
+			local iconw = icon and (icon.Size.X.Offset + 6) or 0
+			label.AutomaticSize = Enum.AutomaticSize.None
+			label.Size = UDim2.new(0, textw, 1, 0)
+			pill.AutomaticSize = Enum.AutomaticSize.None
+			pill.Size = UDim2.new(0, padx * 2 + iconw + textw, 0, 22)
+		end
+		local function fit()
+			applyfit(math.ceil(math.max(label.TextBounds.X, textwidth(label.Text, 7, FONT_BOLD))) + 2)
+			local ok, res = pcall(function()
+				local prm = Instance.new("GetTextBoundsParams")
+				prm.Text = label.Text
+				prm.Font = FONT_BOLD
+				prm.Size = 7
+				prm.Width = 10000
+				return sv.textservice:GetTextBoundsAsync(prm).X
+			end)
+			if ok and res and res > 0 then
+				applyfit(math.ceil(res) + 2)
+			end
+		end
+		task.spawn(fit)
+		applyfit(math.ceil(textwidth(label.Text, 7, FONT_BOLD)) + 2)
+		label:GetPropertyChangedSignal("Text"):Connect(function()
+			task.spawn(fit)
+		end)
+		return pill, label, icon, fit
 	end
 	local statusstrip = instance.frame(userfooter)
 	statusstrip.Name = "Status"
@@ -2630,7 +2657,7 @@ function Chloex:Window(guiconfig)
 	end
 	do
 		local discordlink = "https://discord.gg/USWmtFScPa"
-		local discordpill, discordlabel, discordicon = makepill(statusstrip, {
+		local discordpill, discordlabel, discordicon, discordfit = makepill(statusstrip, {
 			Name = "Discord",
 			LayoutOrder = 1,
 			Icon = "77061761388242",
@@ -2642,19 +2669,7 @@ function Chloex:Window(guiconfig)
 		discordicon.ImageColor3 = Color3.new(1, 1, 1)
 		discordicon.ImageTransparency = ICON_IDLE
 		discordicon.Size = UDim2.new(0, ICON_PX, 0, ICON_PX)
-		local function fitdiscord()
-			local tb = discordlabel.TextBounds.X / uistate.scale
-			if tb <= 0 then
-				tb = textwidth("Discord", 7, FONT_BOLD)
-			end
-			tb = math.ceil(tb) + 2
-			discordlabel.AutomaticSize = Enum.AutomaticSize.None
-			discordlabel.Size = UDim2.new(0, tb, 1, 0)
-			discordpill.AutomaticSize = Enum.AutomaticSize.None
-			discordpill.Size = UDim2.new(0, 16 + ICON_PX + 6 + tb, 0, 22)
-		end
-		fitdiscord()
-		discordlabel:GetPropertyChangedSignal("TextBounds"):Connect(fitdiscord)
+		task.spawn(discordfit)
 		local fadeinfo2 = TweenInfo.new(0.15, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
 		local function seticon(t)
 			sv.ts:Create(discordicon, fadeinfo2, { ImageTransparency = t }):Play()

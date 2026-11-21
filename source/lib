@@ -8743,7 +8743,7 @@ function Chloex:Window(guiconfig)
 				local lp = sv.plrs.LocalPlayer
 				local myuid = lp and lp.UserId or 0
 				local AV = 30
-				local HEAD_H, INPUT_H = 50, 58
+				local HEAD_H, INPUT_H = 44, 50
 				local CF = Font.fromEnum(Enum.Font.GothamMedium)
 				local CFB = Font.fromEnum(Enum.Font.GothamBold)
 				local C_PANEL = Color3.fromRGB(13, 13, 15)
@@ -8780,6 +8780,12 @@ function Chloex:Window(guiconfig)
 					end)
 				end
 				local panel = instance.frame(sectionadd)
+				local topspacer = instance.frame(sectionadd)
+				topspacer.Name = "TopSpacer"
+				topspacer.BackgroundTransparency = 1
+				topspacer.BorderSizePixel = 0
+				topspacer.LayoutOrder = countitem - 1
+				topspacer.Size = UDim2.new(1, 0, 0, 8)
 				panel.Name = "ChatPanel"
 				panel.BorderSizePixel = 0
 				panel.LayoutOrder = countitem
@@ -8798,8 +8804,9 @@ function Chloex:Window(guiconfig)
 					if pw <= 1 or ph <= 1 then
 						return
 					end
-					local w = math.min(tonumber(chatcfg.Width) or 480, pw - 24)
-					local h = math.clamp(ph - 20, 170, tonumber(chatcfg.Height) or 340)
+					local m = 8
+					local w = math.min(tonumber(chatcfg.Width) or 900, pw - 2 * m)
+					local h = math.min(tonumber(chatcfg.Height) or 10000, math.max(120, ph - 2 * m - 3))
 					panel.Size = UDim2.new(0, math.floor(w), 0, math.floor(h))
 					scrollayers.CanvasPosition = Vector2.new(0, 0)
 				end
@@ -8843,7 +8850,7 @@ function Chloex:Window(guiconfig)
 				badge.BorderSizePixel = 0
 				badge.AnchorPoint = Vector2.new(0, 0.5)
 				badge.Position = UDim2.new(0, 12, 0.5, 0)
-				badge.Size = UDim2.new(0, 32, 0, 32)
+				badge.Size = UDim2.new(0, 30, 0, 30)
 				instance.uicorner(badge).CornerRadius = UDim.new(0, 10)
 				local badgeicon = instance.imagelabel(badge)
 				badgeicon.BackgroundTransparency = 1
@@ -8859,12 +8866,12 @@ function Chloex:Window(guiconfig)
 				headtitle.TextSize = 14
 				headtitle.TextColor3 = theme.Text
 				headtitle.TextXAlignment = Enum.TextXAlignment.Left
-				headtitle.Position = UDim2.new(0, 54, 0, 9)
+				headtitle.Position = UDim2.new(0, 52, 0, 6)
 				headtitle.Size = UDim2.new(1, -150, 0, 17)
 				local statusdot = instance.frame(header)
 				statusdot.BackgroundColor3 = theme.Dim
 				statusdot.BorderSizePixel = 0
-				statusdot.Position = UDim2.new(0, 55, 0, 30)
+				statusdot.Position = UDim2.new(0, 53, 0, 26)
 				statusdot.Size = UDim2.new(0, 7, 0, 7)
 				instance.uicorner(statusdot).CornerRadius = UDim.new(1, 0)
 				local headstatus = instance.textlabel(header)
@@ -8874,7 +8881,7 @@ function Chloex:Window(guiconfig)
 				headstatus.TextSize = 11
 				headstatus.TextColor3 = theme.Dim
 				headstatus.TextXAlignment = Enum.TextXAlignment.Left
-				headstatus.Position = UDim2.new(0, 67, 0, 26)
+				headstatus.Position = UDim2.new(0, 65, 0, 22)
 				headstatus.Size = UDim2.new(1, -150, 0, 14)
 				local buildtag = instance.textlabel(header)
 				buildtag.BackgroundColor3 = C_OTHER
@@ -8991,7 +8998,7 @@ function Chloex:Window(guiconfig)
 				box.ClipsDescendants = true
 				box.AnchorPoint = Vector2.new(0, 0.5)
 				box.Position = UDim2.new(0, 12, 0.5, 0)
-				box.Size = UDim2.new(1, -64, 0, 38)
+				box.Size = UDim2.new(1, -60, 0, 34)
 				instance.uicorner(box).CornerRadius = UDim.new(1, 0)
 				local boxpad = instance.uipadding(box)
 				boxpad.PaddingLeft = UDim.new(0, 16)
@@ -9012,7 +9019,7 @@ function Chloex:Window(guiconfig)
 				sendbtn.AutoButtonColor = false
 				sendbtn.AnchorPoint = Vector2.new(1, 0.5)
 				sendbtn.Position = UDim2.new(1, -12, 0.5, 0)
-				sendbtn.Size = UDim2.new(0, 38, 0, 38)
+				sendbtn.Size = UDim2.new(0, 34, 0, 34)
 				sendbtn.BackgroundColor3 = Color3.fromRGB(44, 44, 50)
 				sendbtn.BackgroundTransparency = 0
 				sendbtn.BorderSizePixel = 0
@@ -9096,6 +9103,7 @@ function Chloex:Window(guiconfig)
 					local avail = math.min(listw - AV - 8, listw * 0.78)
 					return math.max(90, math.floor(avail) - 26)
 				end
+				local tobottomref = nil
 				local function applymax()
 					local w = maxtextwidth()
 					for _, row in ipairs(list:GetChildren()) do
@@ -9108,7 +9116,12 @@ function Chloex:Window(guiconfig)
 				end
 				trackConnection(
 					list:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
-						task.defer(applymax)
+						task.defer(function()
+							applymax()
+							if tobottomref then
+								tobottomref()
+							end
+						end)
 					end),
 					"chat.resize"
 				)
@@ -9119,6 +9132,7 @@ function Chloex:Window(guiconfig)
 						list.CanvasPosition = Vector2.new(0, math.max(0, list.AbsoluteCanvasSize.Y - list.AbsoluteWindowSize.Y) + 100)
 					end)
 				end
+				tobottomref = tobottom
 				local function rgbstr(c)
 					return string.format("rgb(%d,%d,%d)", math.floor(c.R * 255), math.floor(c.G * 255), math.floor(c.B * 255))
 				end

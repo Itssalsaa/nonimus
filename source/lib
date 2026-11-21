@@ -8808,8 +8808,6 @@ function Chloex:Window(guiconfig)
 					if pl then
 						pl.HorizontalAlignment = Enum.HorizontalAlignment.Center
 					end
-					local pp = sectionadd:FindFirstChildOfClass("UIPadding") or instance.uipadding(sectionadd)
-					pp.PaddingTop = UDim.new(0, 10)
 				end
 				scrollayers.ScrollingEnabled = false
 				scrollayers.ScrollBarThickness = 0
@@ -8827,6 +8825,13 @@ function Chloex:Window(guiconfig)
 				header.BackgroundTransparency = 0
 				header.BorderSizePixel = 0
 				header.Size = UDim2.new(1, 0, 0, HEAD_H)
+				instance.uicorner(header).CornerRadius = UDim.new(0, 14)
+				local headfill = instance.frame(header)
+				headfill.BackgroundColor3 = C_BAR
+				headfill.BorderSizePixel = 0
+				headfill.AnchorPoint = Vector2.new(0, 1)
+				headfill.Position = UDim2.new(0, 0, 1, 0)
+				headfill.Size = UDim2.new(1, 0, 0, 16)
 				local headline = instance.frame(header)
 				headline.BackgroundColor3 = C_LINE
 				headline.BorderSizePixel = 0
@@ -8876,7 +8881,7 @@ function Chloex:Window(guiconfig)
 				buildtag.BackgroundTransparency = 0
 				buildtag.BorderSizePixel = 0
 				buildtag.FontFace = CF
-				buildtag.Text = "build 7"
+				buildtag.Text = "Beta"
 				buildtag.TextSize = 10
 				buildtag.TextColor3 = theme.Dim
 				buildtag.AnchorPoint = Vector2.new(1, 0.5)
@@ -8887,11 +8892,14 @@ function Chloex:Window(guiconfig)
 				local buildpad = instance.uipadding(buildtag)
 				buildpad.PaddingLeft = UDim.new(0, 9)
 				buildpad.PaddingRight = UDim.new(0, 9)
+				local onlinecount, lastok = nil, false
 				local function setstatus(ok)
 					if not configured then
 						return
 					end
-					headstatus.Text = ok and "Online" or "Offline, mencoba lagi..."
+					lastok = ok
+					headstatus.Text = ok and (onlinecount and string.format("Online • %d pemain", onlinecount) or "Online")
+						or "Offline, mencoba lagi..."
 					headstatus.TextColor3 = ok and theme.SubText or theme.Dim
 					statusdot.BackgroundColor3 = ok and Color3.fromRGB(88, 214, 128) or theme.Dim
 				end
@@ -8959,6 +8967,11 @@ function Chloex:Window(guiconfig)
 				inputbar.AnchorPoint = Vector2.new(0, 1)
 				inputbar.Position = UDim2.new(0, 0, 1, 0)
 				inputbar.Size = UDim2.new(1, 0, 0, INPUT_H)
+				instance.uicorner(inputbar).CornerRadius = UDim.new(0, 14)
+				local inputfill = instance.frame(inputbar)
+				inputfill.BackgroundColor3 = C_BAR
+				inputfill.BorderSizePixel = 0
+				inputfill.Size = UDim2.new(1, 0, 0, 16)
 				local inputline = instance.frame(inputbar)
 				inputline.BackgroundColor3 = C_LINE
 				inputline.BorderSizePixel = 0
@@ -9573,6 +9586,54 @@ function Chloex:Window(guiconfig)
 						end)
 					end
 				end)
+				-- jumlah pemain yang sedang memakai script (heartbeat tiap 30 detik)
+				local function updatecount(n)
+					onlinecount = n
+					if lastok then
+						headstatus.Text = string.format("Online • %d pemain", n)
+					end
+				end
+				local function countonline()
+					local now = os.time() * 1000
+					local cutoff = now - 90000
+					if httpreq and myuid ~= 0 then
+						pcall(httpreq, {
+							Url = DB .. "/online/" .. tostring(myuid) .. ".json",
+							Method = "PUT",
+							Headers = { ["Content-Type"] = "application/json" },
+							Body = string.format("%d", now),
+						})
+					end
+					local data
+					for _, url in ipairs({
+						DB .. "/online.json?orderBy=%22%24value%22&startAt=" .. string.format("%d", cutoff),
+						DB .. "/online.json",
+					}) do
+						local ok, body = pcall(function()
+							return game:HttpGet(url, true)
+						end)
+						if ok and type(body) == "string" then
+							local okj, d = pcall(function()
+								return sv.http:JSONDecode(body)
+							end)
+							if okj and type(d) == "table" and d.error == nil then
+								data = d
+								break
+							end
+						end
+					end
+					if type(data) == "table" then
+						local n = 0
+						for _, v in pairs(data) do
+							if type(v) == "number" and v >= cutoff then
+								n = n + 1
+							end
+						end
+						if n > 0 then
+							updatecount(n)
+						end
+					end
+				end
 				-- hapus pesan kemarin (aturan Firebase hanya mengizinkan hapus pesan sebelum 00:00 WIB)
 				local function cleanup()
 					if not httpreq then
@@ -9612,6 +9673,12 @@ function Chloex:Window(guiconfig)
 					end)
 					task.delay(5, function()
 						pcall(cleanup)
+					end)
+					task.spawn(function()
+						while panel.Parent and not Chloex.Unloaded do
+							pcall(countonline)
+							task.wait(30)
+						end
 					end)
 				end
 				registerSearchItem("Chat", panel)

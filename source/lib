@@ -2708,6 +2708,125 @@ function Chloex:Window(guiconfig)
 		"footer.propertychanged"
 	)
 	decideframe2.Position = UDim2.new(0, 0, 1, -userfooter.Size.Y.Offset)
+	-- ===== Announcement bar (Vercel) =====
+	do
+		local ANNOUNCE_URL = "https://nonimus-anc.up.railway.app/api/get"
+		local POLL_INTERVAL = 8
+		local SCROLL_SPEED = 45
+		local BAR_H = 22
+		local footerh = userfooter.Size.Y.Offset
+		local clip = instance.frame(main)
+		clip.Name = "AnnounceClip"
+		clip.BackgroundTransparency = 1
+		clip.BorderSizePixel = 0
+		clip.ClipsDescendants = true
+		clip.AnchorPoint = Vector2.new(0, 1)
+		clip.Position = UDim2.new(0, 0, 1, -footerh - 1)
+		clip.Size = UDim2.new(1, 0, 0, BAR_H)
+		clip.ZIndex = 50
+		local bar = instance.frame(clip)
+		bar.Name = "AnnounceBar"
+		bar.BackgroundColor3 = theme.Pill
+		bar.BackgroundTransparency = 0.05
+		bar.BorderSizePixel = 0
+		bar.Size = UDim2.new(1, 0, 1, 0)
+		bar.Position = UDim2.new(0, 0, 1, 0)
+		local icon = instance.imagelabel(bar)
+		icon.BackgroundTransparency = 1
+		icon.AnchorPoint = Vector2.new(0, 0.5)
+		icon.Position = UDim2.new(0, 8, 0.5, 0)
+		icon.Size = UDim2.new(0, 14, 0, 14)
+		icon.ImageColor3 = theme.Accent
+		applyicon(icon, "megaphone", 48)
+		local zone = instance.frame(bar)
+		zone.BackgroundTransparency = 1
+		zone.BorderSizePixel = 0
+		zone.ClipsDescendants = true
+		zone.Position = UDim2.new(0, 30, 0, 0)
+		zone.Size = UDim2.new(1, -38, 1, 0)
+		local label = instance.textlabel(zone)
+		label.BackgroundTransparency = 1
+		label.FontFace = FONT_MEDIUM
+		label.TextSize = ts(12)
+		label.TextColor3 = theme.Text
+		label.TextXAlignment = Enum.TextXAlignment.Left
+		label.TextWrapped = false
+		label.RichText = false
+		label.AutomaticSize = Enum.AutomaticSize.X
+		label.Size = UDim2.new(0, 0, 1, 0)
+		label.Position = UDim2.new(1, 0, 0, 0)
+		local current, shown, textx = nil, false, 0
+		local tweeninfo = TweenInfo.new(0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+		local function zonew()
+			return zone.AbsoluteSize.X / uistate.scale
+		end
+		local function showbar(text)
+			label.Text = text
+			textx = zonew()
+			label.Position = UDim2.new(0, textx, 0, 0)
+			if not shown then
+				shown = true
+				sv.ts:Create(bar, tweeninfo, { Position = UDim2.new(0, 0, 0, 0) }):Play()
+			end
+		end
+		local function hidebar()
+			current = nil
+			if not shown then
+				return
+			end
+			shown = false
+			sv.ts:Create(bar, tweeninfo, { Position = UDim2.new(0, 0, 1, 0) }):Play()
+		end
+		trackConnection(
+			game:GetService("RunService").RenderStepped:Connect(function(dt)
+				if not shown or not current then
+					return
+				end
+				if os.clock() >= current.endclock then
+					hidebar()
+					return
+				end
+				local w = label.AbsoluteSize.X / uistate.scale
+				textx = textx - SCROLL_SPEED * dt
+				if textx < -w then
+					textx = zonew()
+				end
+				label.Position = UDim2.new(0, math.floor(textx), 0, 0)
+			end),
+			"announce.scroll"
+		)
+		task.spawn(function()
+			local lp = sv.plrs.LocalPlayer
+			while chloeex.Parent and not Chloex.Unloaded do
+				local url = ANNOUNCE_URL
+					.. "?u=" .. sv.http:UrlEncode(lp and lp.Name or "")
+					.. "&d=" .. sv.http:UrlEncode(lp and lp.DisplayName or "")
+					.. "&t=" .. tostring(os.time())
+				local ok, body = pcall(function()
+					return game:HttpGet(url, true)
+				end)
+				if ok and type(body) == "string" then
+					local okj, data = pcall(function()
+						return sv.http:JSONDecode(body)
+					end)
+					if okj and type(data) == "table" then
+						local remain = tonumber(data.remaining)
+						if data.active and remain and remain > 0 then
+							if not current or current.id ~= data.id then
+								current = { id = data.id, endclock = os.clock() + remain }
+								showbar(tostring(data.text or ""))
+							else
+								current.endclock = os.clock() + remain
+							end
+						else
+							hidebar()
+						end
+					end
+				end
+				task.wait(POLL_INTERVAL)
+			end
+		end)
+	end
 	function guifunc:DestroyGui()
 		disconnectAll()
 		for key, timer in pairs(resizeDebounceTable) do

@@ -2755,41 +2755,111 @@ function Chloex:Window(guiconfig)
 		label.AutomaticSize = Enum.AutomaticSize.X
 		label.Size = UDim2.new(0, 0, 1, 0)
 		label.Position = UDim2.new(1, 0, 0, 0)
-		local current, shown, textx = nil, false, 0
-		local tweeninfo = TweenInfo.new(0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+		local items, order = {}, {}
+		local curid, shown, textx = nil, false, 0
+		local scrolling, anim = false, 0
+		local HOLD = 0.8
+		local upinfo = TweenInfo.new(0.7, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+		local downinfo = TweenInfo.new(0.65, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+		local fadeinfo = TweenInfo.new(0.45, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+		label.TextTransparency = 1
 		local function zonew()
 			return zone.AbsoluteSize.X / uistate.scale
 		end
-		local function showbar(text)
-			label.Text = text
-			textx = zonew()
-			label.Position = UDim2.new(0, textx, 0, 0)
+		local function showitem(id)
+			curid = id
+			label.Text = items[id].text
 			if not shown then
 				shown = true
-				sv.ts:Create(bar, tweeninfo, { Position = UDim2.new(0, 0, 0, 0) }):Play()
+				scrolling = false
+				anim = anim + 1
+				local my = anim
+				textx = 0
+				label.TextTransparency = 1
+				label.Position = UDim2.new(0, 0, 0, 0)
+				local up = sv.ts:Create(bar, upinfo, { Position = UDim2.new(0, 0, 0, 0) })
+				up.Completed:Connect(function()
+					if anim ~= my then
+						return
+					end
+					sv.ts:Create(label, fadeinfo, { TextTransparency = 0 }):Play()
+					task.delay(fadeinfo.Time + HOLD, function()
+						if anim == my then
+							scrolling = true
+						end
+					end)
+				end)
+				up:Play()
+			else
+				label.TextTransparency = 0
+				textx = zonew()
+				label.Position = UDim2.new(0, textx, 0, 0)
+				scrolling = true
 			end
 		end
 		local function hidebar()
-			current = nil
+			curid = nil
 			if not shown then
 				return
 			end
 			shown = false
-			sv.ts:Create(bar, tweeninfo, { Position = UDim2.new(0, 0, 1, 0) }):Play()
+			scrolling = false
+			anim = anim + 1
+			local my = anim
+			local fade = sv.ts:Create(label, fadeinfo, { TextTransparency = 1 })
+			fade.Completed:Connect(function()
+				if anim ~= my then
+					return
+				end
+				sv.ts:Create(bar, downinfo, { Position = UDim2.new(0, 0, 1, 0) }):Play()
+			end)
+			fade:Play()
+		end
+		local function advance()
+			if #order == 0 then
+				hidebar()
+				return
+			end
+			local pos = 0
+			for n, id in ipairs(order) do
+				if id == curid then
+					pos = n
+					break
+				end
+			end
+			showitem(order[(pos % #order) + 1])
+		end
+		local function removeitem(id)
+			items[id] = nil
+			for n, v in ipairs(order) do
+				if v == id then
+					table.remove(order, n)
+					break
+				end
+			end
+			if curid == id then
+				curid = nil
+				advance()
+			end
 		end
 		trackConnection(
 			game:GetService("RunService").RenderStepped:Connect(function(dt)
-				if not shown or not current then
+				if not shown or not curid then
 					return
 				end
-				if os.clock() >= current.endclock then
-					hidebar()
+				local cur = items[curid]
+				if not cur or os.clock() >= cur.endclock then
+					removeitem(curid)
+					return
+				end
+				if not scrolling then
 					return
 				end
 				local w = label.AbsoluteSize.X / uistate.scale
 				textx = textx - SCROLL_SPEED * dt
 				if textx < -w then
-					textx = zonew()
+					advance()
+					return
 				end
 				label.Position = UDim2.new(0, math.floor(textx), 0, 0)
 			end),
@@ -2810,16 +2880,26 @@ function Chloex:Window(guiconfig)
 						return sv.http:JSONDecode(body)
 					end)
 					if okj and type(data) == "table" then
-						local remain = tonumber(data.remaining)
-						if data.active and remain and remain > 0 then
-							if not current or current.id ~= data.id then
-								current = { id = data.id, endclock = os.clock() + remain }
-								showbar(tostring(data.text or ""))
+						local seen = {}
+						for _, it in ipairs(data.items or {}) do
+							local id = tostring(it.id)
+							seen[id] = true
+							local remain = tonumber(it.remaining)
+							local endc = remain and (os.clock() + remain) or math.huge
+							if items[id] then
+								items[id].endclock = endc
 							else
-								current.endclock = os.clock() + remain
+								items[id] = { text = tostring(it.text or ""), endclock = endc }
+								table.insert(order, id)
 							end
-						else
-							hidebar()
+						end
+						for id in pairs(items) do
+							if not seen[id] then
+								removeitem(id)
+							end
+						end
+						if not shown and #order > 0 then
+							advance()
 						end
 					end
 				end

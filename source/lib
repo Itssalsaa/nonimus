@@ -8742,15 +8742,17 @@ function Chloex:Window(guiconfig)
 				local configured = DB ~= "" and not DB:find("GANTI")
 				local lp = sv.plrs.LocalPlayer
 				local myuid = lp and lp.UserId or 0
-				local AV = 28
-				local HEAD_H, INPUT_H = 38, 46
+				local AV = 30
+				local HEAD_H, INPUT_H = 50, 58
 				local CF = Font.fromEnum(Enum.Font.GothamMedium)
 				local CFB = Font.fromEnum(Enum.Font.GothamBold)
-				local C_PANEL = Color3.fromRGB(14, 14, 16)
-				local C_BAR = Color3.fromRGB(19, 19, 22)
-				local C_OTHER = Color3.fromRGB(32, 32, 36)
-				local C_MINE = Color3.fromRGB(66, 66, 74)
-				local C_LINE = Color3.fromRGB(34, 34, 38)
+				local C_PANEL = Color3.fromRGB(13, 13, 15)
+				local C_BAR = Color3.fromRGB(18, 18, 21)
+				local C_OTHER = Color3.fromRGB(34, 34, 39)
+				local C_MINE = Color3.fromRGB(208, 208, 214)
+				local C_MINE_TEXT = Color3.fromRGB(16, 16, 18)
+				local C_MINE_SUB = Color3.fromRGB(86, 86, 94)
+				local C_LINE = Color3.fromRGB(30, 30, 34)
 				local httpreq = request or http_request or (syn and syn.request) or (fluxus and fluxus.request)
 				local TOKFILE = "Nonimus/chat_tokens.json"
 				local tokens = {}
@@ -8785,9 +8787,9 @@ function Chloex:Window(guiconfig)
 				panel.BackgroundColor3 = C_PANEL
 				panel.BackgroundTransparency = 0
 				panel.ClipsDescendants = true
-				instance.uicorner(panel).CornerRadius = UDim.new(0, 10)
+				instance.uicorner(panel).CornerRadius = UDim.new(0, 14)
 				local panelstroke = instance.uistroke(panel)
-				panelstroke.Color = C_LINE
+				panelstroke.Color = Color3.fromRGB(44, 44, 50)
 				panelstroke.Thickness = 1
 				panelstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 				local function fitpanel()
@@ -8796,10 +8798,18 @@ function Chloex:Window(guiconfig)
 					if pw <= 1 or ph <= 1 then
 						return
 					end
-					local w = math.min(tonumber(chatcfg.Width) or 300, pw - 26)
-					local h = math.clamp(ph - 30, 150, tonumber(chatcfg.Height) or 230)
+					local w = math.min(tonumber(chatcfg.Width) or 480, pw - 24)
+					local h = math.clamp(ph - 20, 170, tonumber(chatcfg.Height) or 340)
 					panel.Size = UDim2.new(0, math.floor(w), 0, math.floor(h))
 					scrollayers.CanvasPosition = Vector2.new(0, 0)
+				end
+				do
+					local pl = sectionadd:FindFirstChildOfClass("UIListLayout")
+					if pl then
+						pl.HorizontalAlignment = Enum.HorizontalAlignment.Center
+					end
+					local pp = sectionadd:FindFirstChildOfClass("UIPadding") or instance.uipadding(sectionadd)
+					pp.PaddingTop = UDim.new(0, 10)
 				end
 				scrollayers.ScrollingEnabled = false
 				scrollayers.ScrollBarThickness = 0
@@ -8823,47 +8833,67 @@ function Chloex:Window(guiconfig)
 				headline.AnchorPoint = Vector2.new(0, 1)
 				headline.Position = UDim2.new(0, 0, 1, 0)
 				headline.Size = UDim2.new(1, 0, 0, 1)
+				local badge = instance.frame(header)
+				badge.BackgroundColor3 = C_OTHER
+				badge.BorderSizePixel = 0
+				badge.AnchorPoint = Vector2.new(0, 0.5)
+				badge.Position = UDim2.new(0, 12, 0.5, 0)
+				badge.Size = UDim2.new(0, 32, 0, 32)
+				instance.uicorner(badge).CornerRadius = UDim.new(0, 10)
+				local badgeicon = instance.imagelabel(badge)
+				badgeicon.BackgroundTransparency = 1
+				badgeicon.AnchorPoint = Vector2.new(0.5, 0.5)
+				badgeicon.Position = UDim2.new(0.5, 0, 0.5, 0)
+				badgeicon.Size = UDim2.new(0, 17, 0, 17)
+				badgeicon.ImageColor3 = theme.Text
+				applyicon(badgeicon, "message-circle", 48)
 				local headtitle = instance.textlabel(header)
 				headtitle.BackgroundTransparency = 1
 				headtitle.FontFace = CFB
 				headtitle.Text = "Nonimus Chat"
-				headtitle.TextSize = 13
+				headtitle.TextSize = 14
 				headtitle.TextColor3 = theme.Text
 				headtitle.TextXAlignment = Enum.TextXAlignment.Left
-				headtitle.Position = UDim2.new(0, 12, 0, 4)
-				headtitle.Size = UDim2.new(1, -24, 0, 16)
+				headtitle.Position = UDim2.new(0, 54, 0, 9)
+				headtitle.Size = UDim2.new(1, -150, 0, 17)
 				local statusdot = instance.frame(header)
 				statusdot.BackgroundColor3 = theme.Dim
 				statusdot.BorderSizePixel = 0
-				statusdot.Position = UDim2.new(0, 13, 0, 24)
-				statusdot.Size = UDim2.new(0, 6, 0, 6)
+				statusdot.Position = UDim2.new(0, 55, 0, 30)
+				statusdot.Size = UDim2.new(0, 7, 0, 7)
 				instance.uicorner(statusdot).CornerRadius = UDim.new(1, 0)
 				local headstatus = instance.textlabel(header)
 				headstatus.BackgroundTransparency = 1
 				headstatus.FontFace = CF
 				headstatus.Text = configured and "Menghubungkan..." or "Database belum diatur"
-				headstatus.TextSize = 10
+				headstatus.TextSize = 11
 				headstatus.TextColor3 = theme.Dim
 				headstatus.TextXAlignment = Enum.TextXAlignment.Left
-				headstatus.Position = UDim2.new(0, 25, 0, 20)
-				headstatus.Size = UDim2.new(1, -35, 0, 14)
+				headstatus.Position = UDim2.new(0, 67, 0, 26)
+				headstatus.Size = UDim2.new(1, -150, 0, 14)
 				local buildtag = instance.textlabel(header)
-				buildtag.BackgroundTransparency = 1
+				buildtag.BackgroundColor3 = C_OTHER
+				buildtag.BackgroundTransparency = 0
+				buildtag.BorderSizePixel = 0
 				buildtag.FontFace = CF
 				buildtag.Text = "build 7"
-				buildtag.TextSize = 9
+				buildtag.TextSize = 10
 				buildtag.TextColor3 = theme.Dim
-				buildtag.TextXAlignment = Enum.TextXAlignment.Right
-				buildtag.AnchorPoint = Vector2.new(1, 0)
-				buildtag.Position = UDim2.new(1, -10, 0, 6)
-				buildtag.Size = UDim2.new(0, 50, 0, 12)
+				buildtag.AnchorPoint = Vector2.new(1, 0.5)
+				buildtag.Position = UDim2.new(1, -12, 0.5, 0)
+				buildtag.AutomaticSize = Enum.AutomaticSize.X
+				buildtag.Size = UDim2.new(0, 0, 0, 20)
+				instance.uicorner(buildtag).CornerRadius = UDim.new(1, 0)
+				local buildpad = instance.uipadding(buildtag)
+				buildpad.PaddingLeft = UDim.new(0, 9)
+				buildpad.PaddingRight = UDim.new(0, 9)
 				local function setstatus(ok)
 					if not configured then
 						return
 					end
 					headstatus.Text = ok and "Online" or "Offline, mencoba lagi..."
 					headstatus.TextColor3 = ok and theme.SubText or theme.Dim
-					statusdot.BackgroundColor3 = ok and Color3.fromRGB(120, 200, 140) or theme.Dim
+					statusdot.BackgroundColor3 = ok and Color3.fromRGB(88, 214, 128) or theme.Dim
 				end
 				-- message list
 				local list = instance.scrollingframe(panel)
@@ -8872,7 +8902,7 @@ function Chloex:Window(guiconfig)
 				list.BorderSizePixel = 0
 				list.Position = UDim2.new(0, 0, 0, HEAD_H)
 				list.Size = UDim2.new(1, 0, 1, -HEAD_H - INPUT_H)
-				list.ScrollBarThickness = 4
+				list.ScrollBarThickness = 3
 				list.ScrollBarImageColor3 = Color3.fromRGB(120, 120, 128)
 				list.ScrollBarImageTransparency = 0.15
 				list.VerticalScrollBarInset = Enum.ScrollBarInset.Always
@@ -8882,12 +8912,12 @@ function Chloex:Window(guiconfig)
 				list.CanvasSize = UDim2.new(0, 0, 0, 0)
 				list.Active = true
 				local listlayout = instance.uilistlayout(list)
-				listlayout.Padding = UDim.new(0, 2)
+				listlayout.Padding = UDim.new(0, 3)
 				listlayout.SortOrder = Enum.SortOrder.LayoutOrder
 				local listpad = instance.uipadding(list)
-				listpad.PaddingLeft = UDim.new(0, 8)
-				listpad.PaddingRight = UDim.new(0, 6)
-				listpad.PaddingTop = UDim.new(0, 8)
+				listpad.PaddingLeft = UDim.new(0, 12)
+				listpad.PaddingRight = UDim.new(0, 10)
+				listpad.PaddingTop = UDim.new(0, 10)
 				listpad.PaddingBottom = UDim.new(0, 10)
 				-- catatan di atas daftar pesan
 				local notice = instance.frame(list)
@@ -8895,19 +8925,19 @@ function Chloex:Window(guiconfig)
 				notice.LayoutOrder = 0
 				notice.BackgroundTransparency = 1
 				notice.BorderSizePixel = 0
-				notice.Size = UDim2.new(1, 0, 0, 26)
+				notice.Size = UDim2.new(1, 0, 0, 32)
 				local noticechip = instance.textlabel(notice)
 				noticechip.BackgroundColor3 = C_OTHER
-				noticechip.BackgroundTransparency = 0.2
+				noticechip.BackgroundTransparency = 0.35
 				noticechip.BorderSizePixel = 0
 				noticechip.FontFace = CF
 				noticechip.Text = "Pesan terhapus otomatis tiap 00:00 WIB"
-				noticechip.TextSize = 11
+				noticechip.TextSize = 10
 				noticechip.TextColor3 = theme.SubText
 				noticechip.AnchorPoint = Vector2.new(0.5, 0.5)
 				noticechip.Position = UDim2.new(0.5, 0, 0.5, 0)
 				noticechip.AutomaticSize = Enum.AutomaticSize.X
-				noticechip.Size = UDim2.new(0, 0, 0, 20)
+				noticechip.Size = UDim2.new(0, 0, 0, 22)
 				instance.uicorner(noticechip).CornerRadius = UDim.new(1, 0)
 				local noticepad = instance.uipadding(noticechip)
 				noticepad.PaddingLeft = UDim.new(0, 10)
@@ -8916,7 +8946,7 @@ function Chloex:Window(guiconfig)
 				empty.BackgroundTransparency = 1
 				empty.FontFace = CF
 				empty.Text = configured and "Belum ada pesan, mulai chat duluan!" or "Isi guiconfig.ChatURL dengan URL Firebase"
-				empty.TextSize = 12
+				empty.TextSize = 13
 				empty.TextColor3 = theme.Dim
 				empty.AnchorPoint = Vector2.new(0.5, 0.5)
 				empty.Position = UDim2.new(0.5, 0, 0.5, 8)
@@ -8938,7 +8968,7 @@ function Chloex:Window(guiconfig)
 				box.PlaceholderText = "Tulis pesan..."
 				box.PlaceholderColor3 = theme.Dim
 				box.Text = ""
-				box.TextSize = 12
+				box.TextSize = 13
 				box.TextColor3 = theme.Text
 				box.BackgroundColor3 = C_OTHER
 				box.BackgroundTransparency = 0
@@ -8947,12 +8977,12 @@ function Chloex:Window(guiconfig)
 				box.ClearTextOnFocus = false
 				box.ClipsDescendants = true
 				box.AnchorPoint = Vector2.new(0, 0.5)
-				box.Position = UDim2.new(0, 10, 0.5, 0)
-				box.Size = UDim2.new(1, -54, 0, 30)
-				instance.uicorner(box).CornerRadius = UDim.new(0, 4)
+				box.Position = UDim2.new(0, 12, 0.5, 0)
+				box.Size = UDim2.new(1, -64, 0, 38)
+				instance.uicorner(box).CornerRadius = UDim.new(1, 0)
 				local boxpad = instance.uipadding(box)
-				boxpad.PaddingLeft = UDim.new(0, 10)
-				boxpad.PaddingRight = UDim.new(0, 10)
+				boxpad.PaddingLeft = UDim.new(0, 16)
+				boxpad.PaddingRight = UDim.new(0, 16)
 				local boxstroke = instance.uistroke(box)
 				boxstroke.Color = theme.Accent
 				boxstroke.Thickness = 1
@@ -8968,18 +8998,18 @@ function Chloex:Window(guiconfig)
 				sendbtn.Text = ""
 				sendbtn.AutoButtonColor = false
 				sendbtn.AnchorPoint = Vector2.new(1, 0.5)
-				sendbtn.Position = UDim2.new(1, -10, 0.5, 0)
-				sendbtn.Size = UDim2.new(0, 30, 0, 30)
-				sendbtn.BackgroundColor3 = theme.Accent
-				sendbtn.BackgroundTransparency = 0.55
+				sendbtn.Position = UDim2.new(1, -12, 0.5, 0)
+				sendbtn.Size = UDim2.new(0, 38, 0, 38)
+				sendbtn.BackgroundColor3 = Color3.fromRGB(44, 44, 50)
+				sendbtn.BackgroundTransparency = 0
 				sendbtn.BorderSizePixel = 0
-				instance.uicorner(sendbtn).CornerRadius = UDim.new(0, 4)
+				instance.uicorner(sendbtn).CornerRadius = UDim.new(1, 0)
 				local sendicon = instance.imagelabel(sendbtn)
 				sendicon.BackgroundTransparency = 1
 				sendicon.AnchorPoint = Vector2.new(0.5, 0.5)
 				sendicon.Position = UDim2.new(0.5, 0, 0.5, 0)
-				sendicon.Size = UDim2.new(0, 16, 0, 16)
-				sendicon.ImageColor3 = theme.AccentText
+				sendicon.Size = UDim2.new(0, 18, 0, 18)
+				sendicon.ImageColor3 = theme.Dim
 				applyicon(sendicon, "send", 48)
 				local replybar = instance.frame(panel)
 				replybar.Name = "ReplyBar"
@@ -9027,7 +9057,8 @@ function Chloex:Window(guiconfig)
 				applyicon(replycloseicon, "x", 48)
 				local function refreshsend()
 					local has = (box.Text:match("%S") ~= nil)
-					sv.ts:Create(sendbtn, TweenInfo.new(0.15), { BackgroundTransparency = has and 0 or 0.55 }):Play()
+					sv.ts:Create(sendbtn, TweenInfo.new(0.15), { BackgroundColor3 = has and theme.Accent or Color3.fromRGB(44, 44, 50) }):Play()
+					sv.ts:Create(sendicon, TweenInfo.new(0.15), { ImageColor3 = has and theme.AccentText or theme.Dim }):Play()
 				end
 				box:GetPropertyChangedSignal("Text"):Connect(refreshsend)
 				-- helpers
@@ -9048,9 +9079,9 @@ function Chloex:Window(guiconfig)
 					return Color3.fromHSV(h, 0.32, 0.95)
 				end
 				local function maxtextwidth()
-					local listw = list.AbsoluteSize.X / uistate.scale - 22
+					local listw = list.AbsoluteSize.X / uistate.scale - 24
 					local avail = math.min(listw - AV - 8, listw * 0.78)
-					return math.max(90, math.floor(avail) - 22)
+					return math.max(90, math.floor(avail) - 26)
 				end
 				local function applymax()
 					local w = maxtextwidth()
@@ -9164,7 +9195,7 @@ function Chloex:Window(guiconfig)
 					row.LayoutOrder = rowcount
 					rowsbyid[id] = row
 					if first and rowcount > 1 then
-						instance.uipadding(row).PaddingTop = UDim.new(0, 7)
+						instance.uipadding(row).PaddingTop = UDim.new(0, 10)
 					end
 					local rl = instance.uilistlayout(row)
 					rl.FillDirection = Enum.FillDirection.Horizontal
@@ -9205,14 +9236,21 @@ function Chloex:Window(guiconfig)
 					bubble.Text = ""
 					bubble.TextSize = 1
 					bubble.AutoButtonColor = false
-					instance.uicorner(bubble).CornerRadius = UDim.new(0, 12)
+					instance.uicorner(bubble).CornerRadius = UDim.new(0, 15)
+					if not mine then
+						local bstroke = instance.uistroke(bubble)
+						bstroke.Color = Color3.fromRGB(50, 50, 57)
+						bstroke.Thickness = 1
+						bstroke.Transparency = 0.35
+						bstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+					end
 					local bp = instance.uipadding(bubble)
-					bp.PaddingLeft = UDim.new(0, 11)
-					bp.PaddingRight = UDim.new(0, 11)
-					bp.PaddingTop = UDim.new(0, 5)
-					bp.PaddingBottom = UDim.new(0, 5)
+					bp.PaddingLeft = UDim.new(0, 13)
+					bp.PaddingRight = UDim.new(0, 13)
+					bp.PaddingTop = UDim.new(0, 7)
+					bp.PaddingBottom = UDim.new(0, 7)
 					local bl = instance.uilistlayout(bubble)
-					bl.Padding = UDim.new(0, 2)
+					bl.Padding = UDim.new(0, 3)
 					bl.SortOrder = Enum.SortOrder.LayoutOrder
 					if first and not mine then
 						local nm = instance.textlabel(bubble)
@@ -9222,7 +9260,7 @@ function Chloex:Window(guiconfig)
 						nm.FontFace = CFB
 						nm.Text = tostring(m.name or "?"):sub(1, 24)
 						nm.RichText = false
-						nm.TextSize = 11
+						nm.TextSize = 12
 						nm.TextColor3 = namecolor(uid)
 						nm.TextXAlignment = Enum.TextXAlignment.Left
 						nm.AutomaticSize = Enum.AutomaticSize.XY
@@ -9236,32 +9274,33 @@ function Chloex:Window(guiconfig)
 						q.AutomaticSize = Enum.AutomaticSize.XY
 						q.Size = UDim2.new(0, 0, 0, 0)
 						q.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-						q.BackgroundTransparency = 0.7
+						q.BackgroundTransparency = mine and 0.88 or 0.5
 						q.BorderSizePixel = 0
-						instance.uicorner(q).CornerRadius = UDim.new(0, 5)
+						instance.uicorner(q).CornerRadius = UDim.new(0, 8)
 						local qp = instance.uipadding(q)
-						qp.PaddingLeft = UDim.new(0, 10)
-						qp.PaddingRight = UDim.new(0, 7)
-						qp.PaddingTop = UDim.new(0, 3)
-						qp.PaddingBottom = UDim.new(0, 3)
+						qp.PaddingLeft = UDim.new(0, 12)
+						qp.PaddingRight = UDim.new(0, 9)
+						qp.PaddingTop = UDim.new(0, 5)
+						qp.PaddingBottom = UDim.new(0, 5)
 						local qbar = instance.frame(q)
-						qbar.BackgroundColor3 = namecolor(ru)
+						qbar.BackgroundColor3 = mine and C_MINE_SUB or namecolor(ru)
 						qbar.BorderSizePixel = 0
-						qbar.Position = UDim2.new(0, -10, 0, -3)
-						qbar.Size = UDim2.new(0, 3, 1, 6)
+						qbar.Position = UDim2.new(0, -12, 0, -5)
+						qbar.Size = UDim2.new(0, 3, 1, 10)
+						instance.uicorner(qbar).CornerRadius = UDim.new(1, 0)
 						local ql = instance.textlabel(q)
 						ql.BackgroundTransparency = 1
 						ql.FontFace = CF
 						ql.RichText = true
 						ql.TextWrapped = true
 						ql.TextSize = 11
-						ql.TextColor3 = theme.SubText
+						ql.TextColor3 = mine and C_MINE_SUB or theme.SubText
 						ql.TextXAlignment = Enum.TextXAlignment.Left
 						ql.AutomaticSize = Enum.AutomaticSize.XY
 						ql.Size = UDim2.new(0, 0, 0, 0)
 						ql.Text = string.format(
 							'<font color="%s"><b>%s</b></font>\n%s',
-							rgbstr(namecolor(ru)),
+							rgbstr(mine and Color3.fromRGB(40, 40, 46) or namecolor(ru)),
 							escaperich(tostring(m.rn or "?"):sub(1, 24)),
 							escaperich(tostring(m.rt):sub(1, 80))
 						)
@@ -9275,15 +9314,16 @@ function Chloex:Window(guiconfig)
 					body.FontFace = CF
 					body.RichText = true
 					body.TextWrapped = true
-					body.TextSize = 12
-					body.TextColor3 = theme.Text
+					body.TextSize = 13
+					body.TextColor3 = mine and C_MINE_TEXT or theme.Text
 					body.TextXAlignment = Enum.TextXAlignment.Left
 					body.AutomaticSize = Enum.AutomaticSize.XY
 					body.Size = UDim2.new(0, 0, 0, 0)
 					local stamp = os.date("%H:%M", math.floor(mts / 1000))
 					body.Text = string.format(
-						'%s  <font size="9" color="rgb(150,150,158)">%s</font>',
+						'%s\u{00A0}\u{00A0}\u{00A0}<font size="10" color="%s">%s</font>',
 						escaperich(tostring(m.text or ""):sub(1, 200)),
+						mine and "rgb(96,96,104)" or "rgb(132,132,140)",
 						stamp
 					)
 					local c = instance.uisizeconstraint(body)
@@ -9306,10 +9346,10 @@ function Chloex:Window(guiconfig)
 						b.LayoutOrder = order
 						b.Text = ""
 						b.AutoButtonColor = false
-						b.Size = UDim2.new(0, 28, 0, 28)
+						b.Size = UDim2.new(0, 30, 0, 30)
 						b.BackgroundColor3 = C_OTHER
 						b.BorderSizePixel = 0
-						instance.uicorner(b).CornerRadius = UDim.new(0, 4)
+						instance.uicorner(b).CornerRadius = UDim.new(1, 0)
 						local ic = instance.imagelabel(b)
 						ic.BackgroundTransparency = 1
 						ic.AnchorPoint = Vector2.new(0.5, 0.5)

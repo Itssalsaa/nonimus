@@ -8718,6 +8718,463 @@ function Chloex:Window(guiconfig)
 				currentSubSection = tostring(sectiontext)
 				return subsection
 			end
+			function items:AddChatPanel(chatcfg)
+				chatcfg = chatcfg or {}
+				local DB = (tostring(chatcfg.URL or ""):gsub("/+$", ""))
+				local configured = DB ~= "" and not DB:find("GANTI")
+				local lp = sv.plrs.LocalPlayer
+				local myuid = lp and lp.UserId or 0
+				local AV = 30
+				local httpreq = request or http_request or (syn and syn.request) or (fluxus and fluxus.request)
+				local panel = instance.frame(sectionadd)
+				panel.Name = "ChatPanel"
+				panel.BorderSizePixel = 0
+				panel.LayoutOrder = countitem
+				panel.Size = UDim2.new(1, 0, 0, tonumber(chatcfg.Height) or (isMobile and 250 or 340))
+				panel.BackgroundColor3 = theme.ChatBg
+				panel.BackgroundTransparency = 0.05
+				panel.ClipsDescendants = true
+				instance.uicorner(panel).CornerRadius = UDim.new(0, 8)
+				local panelstroke = instance.uistroke(panel)
+				panelstroke.Color = theme.StrokeSoft
+				panelstroke.Thickness = 1
+				panelstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				-- header
+				local header = instance.frame(panel)
+				header.BackgroundColor3 = theme.Sidebar
+				header.BackgroundTransparency = 0
+				header.BorderSizePixel = 0
+				header.Size = UDim2.new(1, 0, 0, 34)
+				local headicon = instance.imagelabel(header)
+				headicon.BackgroundTransparency = 1
+				headicon.AnchorPoint = Vector2.new(0, 0.5)
+				headicon.Position = UDim2.new(0, 10, 0.5, 0)
+				headicon.Size = UDim2.new(0, 16, 0, 16)
+				headicon.ImageColor3 = theme.Accent
+				applyicon(headicon, "message-circle", 48)
+				local headtitle = instance.textlabel(header)
+				headtitle.BackgroundTransparency = 1
+				headtitle.FontFace = FONT_BOLD
+				headtitle.Text = "Nonimus Chat"
+				headtitle.TextSize = ts(13)
+				headtitle.TextColor3 = theme.Text
+				headtitle.TextXAlignment = Enum.TextXAlignment.Left
+				headtitle.Position = UDim2.new(0, 32, 0, 5)
+				headtitle.Size = UDim2.new(1, -42, 0, 14)
+				local headstatus = instance.textlabel(header)
+				headstatus.BackgroundTransparency = 1
+				headstatus.FontFace = FONT_MEDIUM
+				headstatus.Text = configured and "Menghubungkan..." or "Database belum diatur"
+				headstatus.TextSize = math.max(7, ts(11) - 1)
+				headstatus.TextColor3 = theme.Dim
+				headstatus.TextXAlignment = Enum.TextXAlignment.Left
+				headstatus.Position = UDim2.new(0, 32, 0, 19)
+				headstatus.Size = UDim2.new(1, -42, 0, 12)
+				local function setstatus(ok)
+					if not configured then
+						return
+					end
+					headstatus.Text = ok and "Online · chat reset 00:00 WIB" or "Offline · mencoba lagi..."
+					headstatus.TextColor3 = ok and theme.SubText or theme.Dim
+				end
+				-- message list
+				local list = instance.scrollingframe(panel)
+				list.Name = "Messages"
+				list.BackgroundTransparency = 1
+				list.BorderSizePixel = 0
+				list.Position = UDim2.new(0, 0, 0, 34)
+				list.Size = UDim2.new(1, 0, 1, -34 - 42)
+				list.ScrollBarThickness = 3
+				list.ScrollBarImageColor3 = theme.Bar
+				list.ScrollBarImageTransparency = 0.35
+				list.ScrollingDirection = Enum.ScrollingDirection.Y
+				list.AutomaticCanvasSize = Enum.AutomaticSize.Y
+				list.CanvasSize = UDim2.new(0, 0, 0, 0)
+				list.Active = true
+				local listlayout = instance.uilistlayout(list)
+				listlayout.Padding = UDim.new(0, 7)
+				listlayout.SortOrder = Enum.SortOrder.LayoutOrder
+				local listpad = instance.uipadding(list)
+				listpad.PaddingLeft = UDim.new(0, 8)
+				listpad.PaddingRight = UDim.new(0, 10)
+				listpad.PaddingTop = UDim.new(0, 8)
+				listpad.PaddingBottom = UDim.new(0, 8)
+				local empty = instance.textlabel(panel)
+				empty.BackgroundTransparency = 1
+				empty.FontFace = FONT_MEDIUM
+				empty.Text = configured and "Belum ada pesan hari ini" or "Isi guiconfig.ChatURL dengan URL Firebase"
+				empty.TextSize = ts(12)
+				empty.TextColor3 = theme.Dim
+				empty.AnchorPoint = Vector2.new(0.5, 0.5)
+				empty.Position = UDim2.new(0.5, 0, 0.5, 0)
+				empty.Size = UDim2.new(1, -30, 0, 16)
+				-- input bar
+				local inputbar = instance.frame(panel)
+				inputbar.BackgroundColor3 = theme.Sidebar
+				inputbar.BackgroundTransparency = 0
+				inputbar.BorderSizePixel = 0
+				inputbar.AnchorPoint = Vector2.new(0, 1)
+				inputbar.Position = UDim2.new(0, 0, 1, 0)
+				inputbar.Size = UDim2.new(1, 0, 0, 42)
+				local box = instance.textbox(inputbar)
+				box.FontFace = FONT_MEDIUM
+				box.PlaceholderText = "Tulis pesan..."
+				box.PlaceholderColor3 = theme.Dim
+				box.Text = ""
+				box.TextSize = ts(12)
+				box.TextColor3 = theme.Text
+				box.BackgroundColor3 = theme.Field
+				box.BackgroundTransparency = ELEMENT_ALPHA
+				box.TextXAlignment = Enum.TextXAlignment.Left
+				box.ClearTextOnFocus = false
+				box.ClipsDescendants = true
+				box.AnchorPoint = Vector2.new(0, 0.5)
+				box.Position = UDim2.new(0, 8, 0.5, 0)
+				box.Size = UDim2.new(1, -56, 0, 28)
+				instance.uicorner(box).CornerRadius = UDim.new(0, 14)
+				local boxpad = instance.uipadding(box)
+				boxpad.PaddingLeft = UDim.new(0, 12)
+				boxpad.PaddingRight = UDim.new(0, 12)
+				local sendbtn = instance.textbutton(inputbar)
+				sendbtn.Text = ""
+				sendbtn.AutoButtonColor = false
+				sendbtn.AnchorPoint = Vector2.new(1, 0.5)
+				sendbtn.Position = UDim2.new(1, -8, 0.5, 0)
+				sendbtn.Size = UDim2.new(0, 32, 0, 28)
+				sendbtn.BackgroundColor3 = theme.Accent
+				sendbtn.BackgroundTransparency = 0.1
+				sendbtn.BorderSizePixel = 0
+				instance.uicorner(sendbtn).CornerRadius = UDim.new(1, 0)
+				local sendicon = instance.imagelabel(sendbtn)
+				sendicon.BackgroundTransparency = 1
+				sendicon.AnchorPoint = Vector2.new(0.5, 0.5)
+				sendicon.Position = UDim2.new(0.5, 0, 0.5, 0)
+				sendicon.Size = UDim2.new(0, 15, 0, 15)
+				sendicon.ImageColor3 = theme.AccentText
+				applyicon(sendicon, "send", 48)
+				-- helpers
+				local function mask(name)
+					name = tostring(name or "?")
+					local n = #name
+					if n <= 2 then
+						return name:sub(1, 1) .. "***"
+					end
+					return name:sub(1, 2) .. string.rep("*", math.min(n - 3, 5)) .. name:sub(n)
+				end
+				local function daystart()
+					local now = os.time() * 1000
+					return now - ((now + 25200000) % 86400000)
+				end
+				local function maxtextwidth()
+					local w = list.AbsoluteSize.X / uistate.scale - 18 - AV - 6 - 26
+					return math.max(80, math.floor(w))
+				end
+				local function applymax()
+					local w = maxtextwidth()
+					for _, row in ipairs(list:GetChildren()) do
+						local t = row:FindFirstChild("Bubble") and row.Bubble:FindFirstChild("Text")
+						local c = t and t:FindFirstChildOfClass("UISizeConstraint")
+						if c then
+							c.MaxSize = Vector2.new(w, math.huge)
+						end
+					end
+				end
+				trackConnection(
+					list:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+						task.defer(applymax)
+					end),
+					"chat.resize"
+				)
+				local function tobottom()
+					task.spawn(function()
+						task.wait()
+						task.wait()
+						list.CanvasPosition = Vector2.new(0, math.max(0, list.AbsoluteCanvasSize.Y - list.AbsoluteWindowSize.Y) + 100)
+					end)
+				end
+				local rowcount = 0
+				local function addmessage(m)
+					local uid = math.floor(tonumber(m.uid) or 0)
+					local mine = uid == myuid
+					rowcount = rowcount + 1
+					local row = instance.frame(list)
+					row.Name = "Msg"
+					row.BackgroundTransparency = 1
+					row.BorderSizePixel = 0
+					row.AutomaticSize = Enum.AutomaticSize.Y
+					row.Size = UDim2.new(1, 0, 0, 0)
+					row.LayoutOrder = rowcount
+					local rl = instance.uilistlayout(row)
+					rl.FillDirection = Enum.FillDirection.Horizontal
+					rl.HorizontalAlignment = mine and Enum.HorizontalAlignment.Right or Enum.HorizontalAlignment.Left
+					rl.VerticalAlignment = Enum.VerticalAlignment.Top
+					rl.Padding = UDim.new(0, 6)
+					rl.SortOrder = Enum.SortOrder.LayoutOrder
+					local av = instance.imagelabel(row)
+					av.Name = "Avatar"
+					av.LayoutOrder = mine and 2 or 1
+					av.Size = UDim2.new(0, AV, 0, AV)
+					av.BackgroundColor3 = theme.Element
+					av.BackgroundTransparency = 0.2
+					av.BorderSizePixel = 0
+					av.Image = "rbxthumb://type=AvatarHeadShot&id=" .. uid .. "&w=150&h=150"
+					instance.uicorner(av).CornerRadius = UDim.new(1, 0)
+					local avstroke = instance.uistroke(av)
+					avstroke.Color = mine and theme.Accent or theme.Stroke
+					avstroke.Transparency = mine and 0.5 or 0.3
+					avstroke.Thickness = 1
+					local bubble = instance.frame(row)
+					bubble.Name = "Bubble"
+					bubble.LayoutOrder = mine and 1 or 2
+					bubble.AutomaticSize = Enum.AutomaticSize.XY
+					bubble.Size = UDim2.new(0, 0, 0, 0)
+					bubble.BackgroundColor3 = mine and theme.Mine or theme.Element
+					bubble.BackgroundTransparency = 0.05
+					bubble.BorderSizePixel = 0
+					instance.uicorner(bubble).CornerRadius = UDim.new(0, 9)
+					if mine then
+						local bs = instance.uistroke(bubble)
+						bs.Color = theme.Accent
+						bs.Transparency = 0.75
+						bs.Thickness = 1
+						bs.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+					end
+					local bp = instance.uipadding(bubble)
+					bp.PaddingLeft = UDim.new(0, 9)
+					bp.PaddingRight = UDim.new(0, 9)
+					bp.PaddingTop = UDim.new(0, 5)
+					bp.PaddingBottom = UDim.new(0, 5)
+					local bl = instance.uilistlayout(bubble)
+					bl.Padding = UDim.new(0, 2)
+					bl.SortOrder = Enum.SortOrder.LayoutOrder
+					if not mine then
+						local nm = instance.textlabel(bubble)
+						nm.Name = "Name"
+						nm.LayoutOrder = 1
+						nm.BackgroundTransparency = 1
+						nm.FontFace = FONT_BOLD
+						nm.Text = tostring(m.name or "?"):sub(1, 24)
+						nm.RichText = false
+						nm.TextSize = ts(11)
+						nm.TextColor3 = theme.Accent
+						nm.TextXAlignment = Enum.TextXAlignment.Left
+						nm.AutomaticSize = Enum.AutomaticSize.XY
+						nm.Size = UDim2.new(0, 0, 0, 0)
+					end
+					local body = instance.textlabel(bubble)
+					body.Name = "Text"
+					body.LayoutOrder = 2
+					body.BackgroundTransparency = 1
+					body.FontFace = FONT_MEDIUM
+					body.RichText = true
+					body.TextWrapped = true
+					body.TextSize = ts(12)
+					body.TextColor3 = theme.Text
+					body.TextXAlignment = Enum.TextXAlignment.Left
+					body.AutomaticSize = Enum.AutomaticSize.XY
+					body.Size = UDim2.new(0, 0, 0, 0)
+					local stamp = os.date("%H:%M", math.floor((tonumber(m.ts) or 0) / 1000))
+					body.Text = string.format(
+						'%s  <font size="%d" color="rgb(130,130,138)">%s</font>',
+						escaperich(tostring(m.text or ""):sub(1, 200)),
+						math.max(7, ts(10) - 1),
+						stamp
+					)
+					local c = instance.uisizeconstraint(body)
+					c.MaxSize = Vector2.new(maxtextwidth(), math.huge)
+					local rows = {}
+					for _, ch in ipairs(list:GetChildren()) do
+						if ch.Name == "Msg" then
+							table.insert(rows, ch)
+						end
+					end
+					if #rows > 150 then
+						rows[1]:Destroy()
+					end
+					empty.Visible = false
+					return mine
+				end
+				-- polling
+				local seen = {}
+				local lastts = 0
+				local daystartms = daystart()
+				local initial = true
+				local function clearui()
+					for _, ch in ipairs(list:GetChildren()) do
+						if ch.Name == "Msg" then
+							ch:Destroy()
+						end
+					end
+					seen = {}
+					empty.Visible = true
+				end
+				local function poll()
+					if not configured then
+						return
+					end
+					local ds = daystart()
+					if ds ~= daystartms then
+						daystartms = ds
+						lastts = 0
+						initial = true
+						clearui()
+					end
+					local from = math.max(lastts, daystartms)
+					local url = DB .. "/chat.json?orderBy=%22ts%22&startAt=" .. string.format("%d", from)
+					if initial then
+						url = url .. "&limitToLast=100"
+					end
+					local ok, body = pcall(function()
+						return game:HttpGet(url, true)
+					end)
+					if not ok or type(body) ~= "string" then
+						setstatus(false)
+						return
+					end
+					local okj, data = pcall(function()
+						return sv.http:JSONDecode(body)
+					end)
+					if not okj then
+						setstatus(false)
+						return
+					end
+					setstatus(true)
+					if type(data) ~= "table" then
+						initial = false
+						return
+					end
+					local arr = {}
+					for id, m in pairs(data) do
+						if type(m) == "table" and not seen[id] and type(m.text) == "string" then
+							table.insert(arr, { id = id, m = m })
+						end
+					end
+					table.sort(arr, function(a, b)
+						local ta, tb = tonumber(a.m.ts) or 0, tonumber(b.m.ts) or 0
+						if ta == tb then
+							return a.id < b.id
+						end
+						return ta < tb
+					end)
+					if #arr == 0 then
+						initial = false
+						return
+					end
+					local wasbottom = initial
+						or (list.CanvasPosition.Y + list.AbsoluteWindowSize.Y) >= (list.AbsoluteCanvasSize.Y - 60)
+					local gotmine = false
+					for _, e in ipairs(arr) do
+						seen[e.id] = true
+						lastts = math.max(lastts, tonumber(e.m.ts) or 0)
+						if addmessage(e.m) then
+							gotmine = true
+						end
+					end
+					initial = false
+					if wasbottom or gotmine then
+						tobottom()
+					end
+				end
+				-- send
+				local lastsend = 0
+				local function send()
+					if not configured then
+						chloex("Firebase URL belum diatur", 3, theme.Bad)
+						return
+					end
+					local text = box.Text:match("^%s*(.-)%s*$") or ""
+					if text == "" then
+						return
+					end
+					if os.clock() - lastsend < 1.5 then
+						chloex("Tunggu sebentar sebelum kirim lagi", 2, theme.Bad)
+						return
+					end
+					local len = utf8.len(text)
+					if len and len > 200 then
+						text = text:sub(1, utf8.offset(text, 201) - 1)
+					end
+					if not httpreq then
+						chloex("Executor kamu tidak mendukung request", 3, theme.Bad)
+						return
+					end
+					lastsend = os.clock()
+					box.Text = ""
+					task.spawn(function()
+						local payload = sv.http:JSONEncode({
+							uid = myuid,
+							name = mask(lp and lp.Name),
+							text = text,
+							ts = { [".sv"] = "timestamp" },
+						})
+						local ok, res = pcall(httpreq, {
+							Url = DB .. "/chat.json",
+							Method = "POST",
+							Headers = { ["Content-Type"] = "application/json" },
+							Body = payload,
+						})
+						local code = ok and type(res) == "table" and (res.StatusCode or res.status_code) or 0
+						if code ~= 200 then
+							box.Text = text
+							chloex("Gagal kirim pesan (" .. tostring(code) .. ")", 3, theme.Bad)
+							return
+						end
+						pcall(poll)
+					end)
+				end
+				sendbtn.Activated:Connect(function()
+					send()
+					pcall(function()
+						box:CaptureFocus()
+					end)
+				end)
+				box.FocusLost:Connect(function(enter)
+					if enter then
+						send()
+						pcall(function()
+							box:CaptureFocus()
+						end)
+					end
+				end)
+				-- hapus pesan kemarin (aturan Firebase hanya mengizinkan hapus pesan sebelum 00:00 WIB)
+				local function cleanup()
+					if not httpreq then
+						return
+					end
+					local url = DB .. "/chat.json?orderBy=%22ts%22&endAt=" .. string.format("%d", daystart() - 1) .. "&limitToFirst=30"
+					local ok, body = pcall(function()
+						return game:HttpGet(url, true)
+					end)
+					if not ok or type(body) ~= "string" then
+						return
+					end
+					local okj, data = pcall(function()
+						return sv.http:JSONDecode(body)
+					end)
+					if not okj or type(data) ~= "table" then
+						return
+					end
+					for id in pairs(data) do
+						pcall(httpreq, { Url = DB .. "/chat/" .. id .. ".json", Method = "DELETE" })
+						task.wait(0.15)
+					end
+				end
+				if configured then
+					task.spawn(function()
+						while panel.Parent and not Chloex.Unloaded do
+							pcall(poll)
+							task.wait(3)
+						end
+					end)
+					task.delay(5, function()
+						pcall(cleanup)
+					end)
+				end
+				registerSearchItem("Chat", panel)
+				countitem = countitem + 1
+				yieldbuild()
+				return panel
+			end
 			function items:AddConfigPanel()
 				config:ensuredefault()
 				local autoname = config:getautoload() or ""
@@ -9013,6 +9470,31 @@ function Chloex:Window(guiconfig)
 		else
 			buildConfigTab()
 		end
+	end
+	local chattabmade = false
+	function tabs:AddChatTab(chatcfg)
+		chatcfg = chatcfg or {}
+		if chattabmade then
+			return
+		end
+		chattabmade = true
+		local ChatTab = tabs:AddTab({
+			Name = "Chat",
+			Icon = "message-circle",
+			LayoutOrder = 999999,
+			StartActive = false,
+		})
+		ChatTab:OnOpen(function()
+			local ChatSection = ChatTab:AddSection({ Title = "Chat", AlwaysOpen = true, Header = false })
+			ChatSection:AddChatPanel({
+				URL = chatcfg.URL or guiconfig.ChatURL or "https://nonimuschat-global-default-rtdb.firebaseio.com",
+				Height = chatcfg.Height,
+			})
+		end)
+		return ChatTab
+	end
+	if guiconfig.AutoChatTab ~= false then
+		tabs:AddChatTab()
 	end
 	tabs.Notify = function(self, ...)
 		return Chloex:Notify(...)

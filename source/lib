@@ -8752,6 +8752,31 @@ function Chloex:Window(guiconfig)
 				local C_MINE = Color3.fromRGB(66, 66, 74)
 				local C_LINE = Color3.fromRGB(34, 34, 38)
 				local httpreq = request or http_request or (syn and syn.request) or (fluxus and fluxus.request)
+				local TOKFILE = "Nonimus/chat_tokens.json"
+				local tokens = {}
+				pcall(function()
+					if type(isfile) == "function" and type(readfile) == "function" and isfile(TOKFILE) then
+						local d = sv.http:JSONDecode(readfile(TOKFILE))
+						local cutoff = os.time() - 172800
+						for id, tk in pairs(d) do
+							local t = tonumber(tostring(id):match("^(%d+)_"))
+							if t and t >= cutoff and type(tk) == "string" then
+								tokens[id] = tk
+							end
+						end
+					end
+				end)
+				local function savetokens()
+					pcall(function()
+						if type(writefile) ~= "function" then
+							return
+						end
+						if type(isfolder) == "function" and type(makefolder) == "function" and not isfolder("Nonimus") then
+							makefolder("Nonimus")
+						end
+						writefile(TOKFILE, sv.http:JSONEncode(tokens))
+					end)
+				end
 				local panel = instance.frame(sectionadd)
 				panel.Name = "ChatPanel"
 				panel.BorderSizePixel = 0
@@ -8771,9 +8796,10 @@ function Chloex:Window(guiconfig)
 					if pw <= 1 or ph <= 1 then
 						return
 					end
-					local w = math.min(tonumber(chatcfg.Width) or 330, pw - 26)
-					local h = math.clamp(ph - 26, 170, tonumber(chatcfg.Height) or 270)
+					local w = math.min(tonumber(chatcfg.Width) or 300, pw - 26)
+					local h = math.clamp(ph - 30, 150, tonumber(chatcfg.Height) or 230)
 					panel.Size = UDim2.new(0, math.floor(w), 0, math.floor(h))
+					scrollayers.CanvasPosition = Vector2.new(0, 0)
 				end
 				scrollayers.ScrollingEnabled = false
 				scrollayers.ScrollBarThickness = 0
@@ -8821,6 +8847,16 @@ function Chloex:Window(guiconfig)
 				headstatus.TextXAlignment = Enum.TextXAlignment.Left
 				headstatus.Position = UDim2.new(0, 25, 0, 20)
 				headstatus.Size = UDim2.new(1, -35, 0, 14)
+				local buildtag = instance.textlabel(header)
+				buildtag.BackgroundTransparency = 1
+				buildtag.FontFace = CF
+				buildtag.Text = "build 7"
+				buildtag.TextSize = 9
+				buildtag.TextColor3 = theme.Dim
+				buildtag.TextXAlignment = Enum.TextXAlignment.Right
+				buildtag.AnchorPoint = Vector2.new(1, 0)
+				buildtag.Position = UDim2.new(1, -10, 0, 6)
+				buildtag.Size = UDim2.new(0, 50, 0, 12)
 				local function setstatus(ok)
 					if not configured then
 						return
@@ -8945,6 +8981,50 @@ function Chloex:Window(guiconfig)
 				sendicon.Size = UDim2.new(0, 16, 0, 16)
 				sendicon.ImageColor3 = theme.AccentText
 				applyicon(sendicon, "send", 48)
+				local replybar = instance.frame(panel)
+				replybar.Name = "ReplyBar"
+				replybar.BackgroundColor3 = C_BAR
+				replybar.BackgroundTransparency = 0
+				replybar.BorderSizePixel = 0
+				replybar.AnchorPoint = Vector2.new(0, 1)
+				replybar.Position = UDim2.new(0, 0, 1, -INPUT_H)
+				replybar.Size = UDim2.new(1, 0, 0, 34)
+				replybar.Visible = false
+				local replyline = instance.frame(replybar)
+				replyline.BackgroundColor3 = C_LINE
+				replyline.BorderSizePixel = 0
+				replyline.Size = UDim2.new(1, 0, 0, 1)
+				local replyaccent = instance.frame(replybar)
+				replyaccent.BackgroundColor3 = theme.Accent
+				replyaccent.BorderSizePixel = 0
+				replyaccent.AnchorPoint = Vector2.new(0, 0.5)
+				replyaccent.Position = UDim2.new(0, 10, 0.5, 0)
+				replyaccent.Size = UDim2.new(0, 3, 0, 22)
+				instance.uicorner(replyaccent).CornerRadius = UDim.new(1, 0)
+				local replytext = instance.textlabel(replybar)
+				replytext.BackgroundTransparency = 1
+				replytext.FontFace = CF
+				replytext.RichText = true
+				replytext.TextSize = 11
+				replytext.TextColor3 = theme.SubText
+				replytext.TextXAlignment = Enum.TextXAlignment.Left
+				replytext.TextTruncate = Enum.TextTruncate.AtEnd
+				replytext.Position = UDim2.new(0, 20, 0, 1)
+				replytext.Size = UDim2.new(1, -56, 1, -1)
+				local replyclose = instance.textbutton(replybar)
+				replyclose.Text = ""
+				replyclose.AutoButtonColor = false
+				replyclose.BackgroundTransparency = 1
+				replyclose.AnchorPoint = Vector2.new(1, 0.5)
+				replyclose.Position = UDim2.new(1, -8, 0.5, 0)
+				replyclose.Size = UDim2.new(0, 24, 0, 24)
+				local replycloseicon = instance.imagelabel(replyclose)
+				replycloseicon.BackgroundTransparency = 1
+				replycloseicon.AnchorPoint = Vector2.new(0.5, 0.5)
+				replycloseicon.Position = UDim2.new(0.5, 0, 0.5, 0)
+				replycloseicon.Size = UDim2.new(0, 14, 0, 14)
+				replycloseicon.ImageColor3 = theme.SubText
+				applyicon(replycloseicon, "x", 48)
 				local function refreshsend()
 					local has = (box.Text:match("%S") ~= nil)
 					sv.ts:Create(sendbtn, TweenInfo.new(0.15), { BackgroundTransparency = has and 0 or 0.55 }):Play()
@@ -8995,9 +9075,80 @@ function Chloex:Window(guiconfig)
 						list.CanvasPosition = Vector2.new(0, math.max(0, list.AbsoluteCanvasSize.Y - list.AbsoluteWindowSize.Y) + 100)
 					end)
 				end
+				local function rgbstr(c)
+					return string.format("rgb(%d,%d,%d)", math.floor(c.R * 255), math.floor(c.G * 255), math.floor(c.B * 255))
+				end
+				local replyto = nil
+				local function clearreply()
+					replyto = nil
+					replybar.Visible = false
+					list.Size = UDim2.new(1, 0, 1, -HEAD_H - INPUT_H)
+				end
+				local function setreply(m, uid)
+					local snip = tostring(m.text or ""):gsub("%s+", " ")
+					if utf8.len(snip) and utf8.len(snip) > 45 then
+						snip = snip:sub(1, utf8.offset(snip, 46) - 1) .. "..."
+					end
+					replyto = { name = tostring(m.name or "?"):sub(1, 24), text = snip, uid = uid }
+					replytext.Text = string.format(
+						'Membalas <font color="%s"><b>%s</b></font>  %s',
+						rgbstr(namecolor(uid)),
+						escaperich(replyto.name),
+						escaperich(snip)
+					)
+					replybar.Visible = true
+					list.Size = UDim2.new(1, 0, 1, -HEAD_H - INPUT_H - 34)
+					task.defer(function()
+						list.CanvasPosition = Vector2.new(0, math.max(0, list.AbsoluteCanvasSize.Y - list.AbsoluteWindowSize.Y) + 100)
+					end)
+					pcall(function()
+						box:CaptureFocus()
+					end)
+				end
+				replyclose.Activated:Connect(clearreply)
 				local rowcount = 0
 				local lastuid, lastmsgts = nil, 0
-				local function addmessage(m)
+				local rowsbyid = {}
+				local function deletemsg(id)
+					local tk = tokens[id]
+					if not tk or not httpreq or not tostring(id):match("^[%w_]+$") then
+						return
+					end
+					task.spawn(function()
+						local hdr = { ["Content-Type"] = "application/json" }
+						local ok1, r1 = pcall(httpreq, {
+							Url = DB .. "/delreq/" .. id .. ".json",
+							Method = "PUT",
+							Headers = hdr,
+							Body = '"' .. tk .. '"',
+						})
+						local c1 = ok1 and type(r1) == "table" and (r1.StatusCode or r1.status_code) or 0
+						if c1 ~= 200 then
+							chloex("Gagal hapus pesan (" .. tostring(c1) .. ")", 3, theme.Bad)
+							return
+						end
+						local ok2, r2 = pcall(httpreq, {
+							Url = DB .. "/.json",
+							Method = "PATCH",
+							Headers = hdr,
+							Body = '{"chat/' .. id .. '":null,"owners/' .. id .. '":null,"delreq/' .. id .. '":null}',
+						})
+						local c2 = ok2 and type(r2) == "table" and (r2.StatusCode or r2.status_code) or 0
+						if c2 ~= 200 then
+							chloex("Gagal hapus pesan (" .. tostring(c2) .. ")", 3, theme.Bad)
+							return
+						end
+						tokens[id] = nil
+						savetokens()
+						local row = rowsbyid[id]
+						if row then
+							row:Destroy()
+							rowsbyid[id] = nil
+						end
+						chloex("Pesan dihapus", 2, theme.Good)
+					end)
+				end
+				local function addmessage(id, m)
 					local uid = math.floor(tonumber(m.uid) or 0)
 					local mts = tonumber(m.ts) or 0
 					local mine = uid == myuid
@@ -9011,6 +9162,7 @@ function Chloex:Window(guiconfig)
 					row.AutomaticSize = Enum.AutomaticSize.Y
 					row.Size = UDim2.new(1, 0, 0, 0)
 					row.LayoutOrder = rowcount
+					rowsbyid[id] = row
 					if first and rowcount > 1 then
 						instance.uipadding(row).PaddingTop = UDim.new(0, 7)
 					end
@@ -9042,7 +9194,7 @@ function Chloex:Window(guiconfig)
 						spacer.BorderSizePixel = 0
 						spacer.Size = UDim2.new(0, AV, 0, 1)
 					end
-					local bubble = instance.frame(row)
+					local bubble = instance.textbutton(row)
 					bubble.Name = "Bubble"
 					bubble.LayoutOrder = mine and 1 or 2
 					bubble.AutomaticSize = Enum.AutomaticSize.XY
@@ -9050,6 +9202,9 @@ function Chloex:Window(guiconfig)
 					bubble.BackgroundColor3 = mine and C_MINE or C_OTHER
 					bubble.BackgroundTransparency = 0
 					bubble.BorderSizePixel = 0
+					bubble.Text = ""
+					bubble.TextSize = 1
+					bubble.AutoButtonColor = false
 					instance.uicorner(bubble).CornerRadius = UDim.new(0, 12)
 					local bp = instance.uipadding(bubble)
 					bp.PaddingLeft = UDim.new(0, 11)
@@ -9073,9 +9228,49 @@ function Chloex:Window(guiconfig)
 						nm.AutomaticSize = Enum.AutomaticSize.XY
 						nm.Size = UDim2.new(0, 0, 0, 0)
 					end
+					if type(m.rt) == "string" and m.rt ~= "" then
+						local ru = math.floor(tonumber(m.ru) or 0)
+						local q = instance.frame(bubble)
+						q.Name = "Quote"
+						q.LayoutOrder = 2
+						q.AutomaticSize = Enum.AutomaticSize.XY
+						q.Size = UDim2.new(0, 0, 0, 0)
+						q.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+						q.BackgroundTransparency = 0.7
+						q.BorderSizePixel = 0
+						instance.uicorner(q).CornerRadius = UDim.new(0, 5)
+						local qp = instance.uipadding(q)
+						qp.PaddingLeft = UDim.new(0, 10)
+						qp.PaddingRight = UDim.new(0, 7)
+						qp.PaddingTop = UDim.new(0, 3)
+						qp.PaddingBottom = UDim.new(0, 3)
+						local qbar = instance.frame(q)
+						qbar.BackgroundColor3 = namecolor(ru)
+						qbar.BorderSizePixel = 0
+						qbar.Position = UDim2.new(0, -10, 0, -3)
+						qbar.Size = UDim2.new(0, 3, 1, 6)
+						local ql = instance.textlabel(q)
+						ql.BackgroundTransparency = 1
+						ql.FontFace = CF
+						ql.RichText = true
+						ql.TextWrapped = true
+						ql.TextSize = 11
+						ql.TextColor3 = theme.SubText
+						ql.TextXAlignment = Enum.TextXAlignment.Left
+						ql.AutomaticSize = Enum.AutomaticSize.XY
+						ql.Size = UDim2.new(0, 0, 0, 0)
+						ql.Text = string.format(
+							'<font color="%s"><b>%s</b></font>\n%s',
+							rgbstr(namecolor(ru)),
+							escaperich(tostring(m.rn or "?"):sub(1, 24)),
+							escaperich(tostring(m.rt):sub(1, 80))
+						)
+						local qc = instance.uisizeconstraint(ql)
+						qc.MaxSize = Vector2.new(math.max(70, maxtextwidth() - 20), math.huge)
+					end
 					local body = instance.textlabel(bubble)
 					body.Name = "Text"
-					body.LayoutOrder = 2
+					body.LayoutOrder = 3
 					body.BackgroundTransparency = 1
 					body.FontFace = CF
 					body.RichText = true
@@ -9093,6 +9288,51 @@ function Chloex:Window(guiconfig)
 					)
 					local c = instance.uisizeconstraint(body)
 					c.MaxSize = Vector2.new(maxtextwidth(), math.huge)
+					local actions = instance.frame(row)
+					actions.Name = "Actions"
+					actions.LayoutOrder = mine and 0 or 3
+					actions.Visible = false
+					actions.BackgroundTransparency = 1
+					actions.BorderSizePixel = 0
+					actions.AutomaticSize = Enum.AutomaticSize.XY
+					actions.Size = UDim2.new(0, 0, 0, 0)
+					local al = instance.uilistlayout(actions)
+					al.FillDirection = Enum.FillDirection.Horizontal
+					al.Padding = UDim.new(0, 4)
+					al.VerticalAlignment = Enum.VerticalAlignment.Top
+					al.SortOrder = Enum.SortOrder.LayoutOrder
+					local function actionbtn(order, iconname, cb)
+						local b = instance.textbutton(actions)
+						b.LayoutOrder = order
+						b.Text = ""
+						b.AutoButtonColor = false
+						b.Size = UDim2.new(0, 28, 0, 28)
+						b.BackgroundColor3 = C_OTHER
+						b.BorderSizePixel = 0
+						instance.uicorner(b).CornerRadius = UDim.new(0, 4)
+						local ic = instance.imagelabel(b)
+						ic.BackgroundTransparency = 1
+						ic.AnchorPoint = Vector2.new(0.5, 0.5)
+						ic.Position = UDim2.new(0.5, 0, 0.5, 0)
+						ic.Size = UDim2.new(0, 15, 0, 15)
+						ic.ImageColor3 = theme.SubText
+						applyicon(ic, iconname, 48)
+						b.Activated:Connect(function()
+							actions.Visible = false
+							cb()
+						end)
+					end
+					actionbtn(1, "reply", function()
+						setreply(m, uid)
+					end)
+					if mine and tokens[id] then
+						actionbtn(2, "trash-2", function()
+							deletemsg(id)
+						end)
+					end
+					bubble.Activated:Connect(function()
+						actions.Visible = not actions.Visible
+					end)
 					local rows = {}
 					for _, ch in ipairs(list:GetChildren()) do
 						if ch.Name == "Msg" then
@@ -9117,8 +9357,33 @@ function Chloex:Window(guiconfig)
 						end
 					end
 					seen = {}
+					rowsbyid = {}
 					lastuid, lastmsgts = nil, 0
 					empty.Visible = true
+				end
+				local pollcount = 0
+				local function syncdeleted()
+					local ok, body = pcall(function()
+						return game:HttpGet(DB .. "/chat.json?shallow=true", true)
+					end)
+					if not ok or type(body) ~= "string" then
+						return
+					end
+					local okj, data = pcall(function()
+						return sv.http:JSONDecode(body)
+					end)
+					if not okj then
+						return
+					end
+					data = type(data) == "table" and data or {}
+					for id, row in pairs(rowsbyid) do
+						if not data[id] then
+							rowsbyid[id] = nil
+							if row and row.Parent then
+								row:Destroy()
+							end
+						end
+					end
 				end
 				local function poll()
 					if not configured then
@@ -9151,6 +9416,10 @@ function Chloex:Window(guiconfig)
 						return
 					end
 					setstatus(true)
+					pollcount = pollcount + 1
+					if pollcount % 3 == 0 then
+						syncdeleted()
+					end
 					if type(data) ~= "table" then
 						initial = false
 						return
@@ -9178,7 +9447,7 @@ function Chloex:Window(guiconfig)
 					for _, e in ipairs(arr) do
 						seen[e.id] = true
 						lastts = math.max(lastts, tonumber(e.m.ts) or 0)
-						if addmessage(e.m) then
+						if addmessage(e.id, e.m) then
 							gotmine = true
 						end
 					end
@@ -9212,16 +9481,30 @@ function Chloex:Window(guiconfig)
 					end
 					lastsend = os.clock()
 					box.Text = ""
+					local sentreply = replyto
+					clearreply()
 					task.spawn(function()
-						local payload = sv.http:JSONEncode({
+						local g = (sv.http:GenerateGUID(false):gsub("[^%w]", ""))
+						local id = tostring(os.time()) .. "_" .. g:sub(1, 10)
+						local token = (sv.http:GenerateGUID(false):gsub("[^%w]", ""))
+						local entry = {
 							uid = myuid,
 							name = mask(lp and lp.Name),
 							text = text,
 							ts = { [".sv"] = "timestamp" },
+						}
+						if sentreply then
+							entry.rt = sentreply.text
+							entry.rn = sentreply.name
+							entry.ru = sentreply.uid
+						end
+						local payload = sv.http:JSONEncode({
+							["chat/" .. id] = entry,
+							["owners/" .. id] = token,
 						})
 						local ok, res = pcall(httpreq, {
-							Url = DB .. "/chat.json",
-							Method = "POST",
+							Url = DB .. "/.json",
+							Method = "PATCH",
 							Headers = { ["Content-Type"] = "application/json" },
 							Body = payload,
 						})
@@ -9231,6 +9514,8 @@ function Chloex:Window(guiconfig)
 							chloex("Gagal kirim pesan (" .. tostring(code) .. ")", 3, theme.Bad)
 							return
 						end
+						tokens[id] = token
+						savetokens()
 						pcall(poll)
 					end)
 				end
@@ -9267,7 +9552,14 @@ function Chloex:Window(guiconfig)
 						return
 					end
 					for id in pairs(data) do
-						pcall(httpreq, { Url = DB .. "/chat/" .. id .. ".json", Method = "DELETE" })
+						if tostring(id):match("^[%w_%-]+$") then
+							pcall(httpreq, {
+								Url = DB .. "/.json",
+								Method = "PATCH",
+								Headers = { ["Content-Type"] = "application/json" },
+								Body = '{"chat/' .. id .. '":null,"owners/' .. id .. '":null}',
+							})
+						end
 						task.wait(0.15)
 					end
 				end

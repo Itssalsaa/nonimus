@@ -8785,7 +8785,7 @@ function Chloex:Window(guiconfig)
 				topspacer.BackgroundTransparency = 1
 				topspacer.BorderSizePixel = 0
 				topspacer.LayoutOrder = countitem - 1
-				topspacer.Size = UDim2.new(1, 0, 0, 8)
+				topspacer.Size = UDim2.new(1, 0, 0, 12)
 				panel.Name = "ChatPanel"
 				panel.BorderSizePixel = 0
 				panel.LayoutOrder = countitem
@@ -8804,7 +8804,7 @@ function Chloex:Window(guiconfig)
 					if pw <= 1 or ph <= 1 then
 						return
 					end
-					local m = 8
+					local m = 12
 					local w = math.min(tonumber(chatcfg.Width) or 900, pw - 2 * m)
 					local h = math.min(tonumber(chatcfg.Height) or 10000, math.max(120, ph - 2 * m - 3))
 					panel.Size = UDim2.new(0, math.floor(w), 0, math.floor(h))
@@ -9308,15 +9308,15 @@ function Chloex:Window(guiconfig)
 						q.BorderSizePixel = 0
 						instance.uicorner(q).CornerRadius = UDim.new(0, 10)
 						local qp = instance.uipadding(q)
-						qp.PaddingLeft = UDim.new(0, 12)
+						qp.PaddingLeft = UDim.new(0, 14)
 						qp.PaddingRight = UDim.new(0, 9)
 						qp.PaddingTop = UDim.new(0, 5)
 						qp.PaddingBottom = UDim.new(0, 5)
 						local qbar = instance.frame(q)
 						qbar.BackgroundColor3 = mine and C_MINE_SUB or namecolor(ru)
 						qbar.BorderSizePixel = 0
-						qbar.Position = UDim2.new(0, -12, 0, -5)
-						qbar.Size = UDim2.new(0, 3, 1, 10)
+						qbar.Position = UDim2.new(0, -8, 0, -1)
+						qbar.Size = UDim2.new(0, 3, 1, 2)
 						instance.uicorner(qbar).CornerRadius = UDim.new(1, 0)
 						local ql = instance.textlabel(q)
 						ql.BackgroundTransparency = 1

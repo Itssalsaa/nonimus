@@ -1563,16 +1563,16 @@ local LIBSTR = {
 	de = { search = "Suchen", results = "Suchergebnisse", noresults = "Keine Funktionen gefunden." },
 }
 local CHATSTR = {
-	en = { c_connecting = "Connecting...", c_nodb = "Database not set", c_online = "Online", c_online_n = "Online • %d players", c_offline = "Offline, retrying...", c_notice = "Messages are deleted automatically every 00:00 WIB", c_empty = "No messages yet, start the chat!", c_empty_nodb = "Set guiconfig.ChatURL to your Firebase URL", c_placeholder = "Write a message...", c_replying = "Replying to", c_delfail = "Failed to delete message (%s)", c_deleted = "Message deleted", c_import = "Import: ", c_saved = "Config saved as '%s'", c_invalid = "Invalid config", c_nofirebase = "Firebase URL is not set", c_wait = "Wait a moment before sending again", c_noreq = "Your executor does not support requests", c_sendfail = "Failed to send message (%s)", c_share = "Share Config", c_cfgread = "Config could not be read", c_sharefail = "Failed to share config (%s)", c_shared = "Config '%s' shared", c_none = "No saved configs yet", c_sharing = "Sharing config: " },
-	id = { c_connecting = "Menghubungkan...", c_nodb = "Database belum diatur", c_online = "Online", c_online_n = "Online • %d pemain", c_offline = "Offline, mencoba lagi...", c_notice = "Pesan terhapus otomatis tiap 00:00 WIB", c_empty = "Belum ada pesan, mulai chat duluan!", c_empty_nodb = "Isi guiconfig.ChatURL dengan URL Firebase", c_placeholder = "Tulis pesan...", c_replying = "Membalas", c_delfail = "Gagal hapus pesan (%s)", c_deleted = "Pesan dihapus", c_import = "Import: ", c_saved = "Config disimpan sebagai '%s'", c_invalid = "Config tidak valid", c_nofirebase = "Firebase URL belum diatur", c_wait = "Tunggu sebentar sebelum kirim lagi", c_noreq = "Executor kamu tidak mendukung request", c_sendfail = "Gagal kirim pesan (%s)", c_share = "Bagikan Config", c_cfgread = "Config tidak bisa dibaca", c_sharefail = "Gagal membagikan config (%s)", c_shared = "Config '%s' dibagikan", c_none = "Belum ada config tersimpan", c_sharing = "Membagikan config: " },
-	ms = { c_connecting = "Menyambung...", c_nodb = "Pangkalan data belum ditetapkan", c_online = "Dalam talian", c_online_n = "Dalam talian • %d pemain", c_offline = "Luar talian, mencuba semula...", c_notice = "Mesej dipadam secara automatik setiap 00:00 WIB", c_empty = "Belum ada mesej, mulakan sembang dahulu!", c_empty_nodb = "Tetapkan guiconfig.ChatURL kepada URL Firebase anda", c_placeholder = "Tulis mesej...", c_replying = "Membalas", c_delfail = "Gagal memadam mesej (%s)", c_deleted = "Mesej dipadam", c_import = "Import: ", c_saved = "Config disimpan sebagai '%s'", c_invalid = "Config tidak sah", c_nofirebase = "URL Firebase belum ditetapkan", c_wait = "Tunggu sebentar sebelum menghantar lagi", c_noreq = "Executor anda tidak menyokong request", c_sendfail = "Gagal menghantar mesej (%s)", c_share = "Kongsi Config", c_cfgread = "Config tidak dapat dibaca", c_sharefail = "Gagal berkongsi config (%s)", c_shared = "Config '%s' dikongsi", c_none = "Belum ada config disimpan", c_sharing = "Berkongsi config: " },
-	tr = { c_connecting = "Bağlanıyor...", c_nodb = "Veritabanı ayarlanmadı", c_online = "Çevrimiçi", c_online_n = "Çevrimiçi • %d oyuncu", c_offline = "Çevrimdışı, yeniden deneniyor...", c_notice = "Mesajlar her gün 00:00 WIB'de otomatik silinir", c_empty = "Henüz mesaj yok, sohbeti sen başlat!", c_empty_nodb = "guiconfig.ChatURL'yi Firebase URL'nle doldur", c_placeholder = "Mesaj yaz...", c_replying = "Yanıtlanıyor:", c_delfail = "Mesaj silinemedi (%s)", c_deleted = "Mesaj silindi", c_import = "İçe aktar: ", c_saved = "Config '%s' olarak kaydedildi", c_invalid = "Geçersiz config", c_nofirebase = "Firebase URL'si ayarlanmadı", c_wait = "Tekrar göndermeden önce biraz bekle", c_noreq = "Executor'ın request desteklemiyor", c_sendfail = "Mesaj gönderilemedi (%s)", c_share = "Config Paylaş", c_cfgread = "Config okunamadı", c_sharefail = "Config paylaşılamadı (%s)", c_shared = "'%s' config'i paylaşıldı", c_none = "Henüz kayıtlı config yok", c_sharing = "Config paylaşılıyor: " },
-	pt = { c_connecting = "Conectando...", c_nodb = "Banco de dados não configurado", c_online = "Online", c_online_n = "Online • %d jogadores", c_offline = "Offline, tentando de novo...", c_notice = "As mensagens são apagadas automaticamente às 00:00 WIB", c_empty = "Ainda não há mensagens, comece o chat!", c_empty_nodb = "Defina guiconfig.ChatURL com a URL do Firebase", c_placeholder = "Escreva uma mensagem...", c_replying = "Respondendo a", c_delfail = "Falha ao apagar a mensagem (%s)", c_deleted = "Mensagem apagada", c_import = "Importar: ", c_saved = "Config salva como '%s'", c_invalid = "Config inválida", c_nofirebase = "URL do Firebase não configurada", c_wait = "Aguarde um pouco antes de enviar de novo", c_noreq = "Seu executor não suporta requisições", c_sendfail = "Falha ao enviar a mensagem (%s)", c_share = "Compartilhar Config", c_cfgread = "Não foi possível ler a config", c_sharefail = "Falha ao compartilhar a config (%s)", c_shared = "Config '%s' compartilhada", c_none = "Nenhuma config salva ainda", c_sharing = "Compartilhando config: " },
-	es = { c_connecting = "Conectando...", c_nodb = "Base de datos sin configurar", c_online = "En línea", c_online_n = "En línea • %d jugadores", c_offline = "Sin conexión, reintentando...", c_notice = "Los mensajes se borran automáticamente a las 00:00 WIB", c_empty = "Aún no hay mensajes, ¡empieza el chat!", c_empty_nodb = "Rellena guiconfig.ChatURL con la URL de Firebase", c_placeholder = "Escribe un mensaje...", c_replying = "Respondiendo a", c_delfail = "No se pudo borrar el mensaje (%s)", c_deleted = "Mensaje borrado", c_import = "Importar: ", c_saved = "Config guardada como '%s'", c_invalid = "Config no válida", c_nofirebase = "URL de Firebase sin configurar", c_wait = "Espera un momento antes de volver a enviar", c_noreq = "Tu executor no admite requests", c_sendfail = "No se pudo enviar el mensaje (%s)", c_share = "Compartir Config", c_cfgread = "No se pudo leer la config", c_sharefail = "No se pudo compartir la config (%s)", c_shared = "Config '%s' compartida", c_none = "Aún no hay configs guardadas", c_sharing = "Compartiendo config: " },
-	vi = { c_connecting = "Đang kết nối...", c_nodb = "Chưa thiết lập cơ sở dữ liệu", c_online = "Trực tuyến", c_online_n = "Trực tuyến • %d người chơi", c_offline = "Ngoại tuyến, đang thử lại...", c_notice = "Tin nhắn tự động xóa lúc 00:00 WIB mỗi ngày", c_empty = "Chưa có tin nhắn, hãy bắt đầu trò chuyện!", c_empty_nodb = "Điền URL Firebase vào guiconfig.ChatURL", c_placeholder = "Nhập tin nhắn...", c_replying = "Trả lời", c_delfail = "Xóa tin nhắn thất bại (%s)", c_deleted = "Đã xóa tin nhắn", c_import = "Nhập: ", c_saved = "Đã lưu config với tên '%s'", c_invalid = "Config không hợp lệ", c_nofirebase = "Chưa thiết lập URL Firebase", c_wait = "Vui lòng đợi một chút trước khi gửi lại", c_noreq = "Executor của bạn không hỗ trợ request", c_sendfail = "Gửi tin nhắn thất bại (%s)", c_share = "Chia sẻ Config", c_cfgread = "Không đọc được config", c_sharefail = "Chia sẻ config thất bại (%s)", c_shared = "Đã chia sẻ config '%s'", c_none = "Chưa có config nào được lưu", c_sharing = "Đang chia sẻ config: " },
-	ru = { c_connecting = "Подключение...", c_nodb = "База данных не настроена", c_online = "В сети", c_online_n = "В сети • игроков: %d", c_offline = "Не в сети, повторная попытка...", c_notice = "Сообщения удаляются автоматически каждый день в 00:00 WIB", c_empty = "Сообщений пока нет, начните чат!", c_empty_nodb = "Укажите URL Firebase в guiconfig.ChatURL", c_placeholder = "Напишите сообщение...", c_replying = "Ответ для", c_delfail = "Не удалось удалить сообщение (%s)", c_deleted = "Сообщение удалено", c_import = "Импорт: ", c_saved = "Конфиг сохранён как '%s'", c_invalid = "Недопустимый конфиг", c_nofirebase = "URL Firebase не настроен", c_wait = "Подождите немного перед повторной отправкой", c_noreq = "Ваш executor не поддерживает request", c_sendfail = "Не удалось отправить сообщение (%s)", c_share = "Поделиться конфигом", c_cfgread = "Не удалось прочитать конфиг", c_sharefail = "Не удалось поделиться конфигом (%s)", c_shared = "Конфиг '%s' отправлен", c_none = "Сохранённых конфигов пока нет", c_sharing = "Делюсь конфигом: " },
-	ko = { c_connecting = "연결 중...", c_nodb = "데이터베이스가 설정되지 않았습니다", c_online = "온라인", c_online_n = "온라인 • 플레이어 %d명", c_offline = "오프라인, 다시 시도 중...", c_notice = "메시지는 매일 00:00 WIB에 자동 삭제됩니다", c_empty = "아직 메시지가 없어요, 먼저 채팅을 시작해 보세요!", c_empty_nodb = "guiconfig.ChatURL에 Firebase URL을 입력하세요", c_placeholder = "메시지를 입력하세요...", c_replying = "답장 대상", c_delfail = "메시지 삭제 실패 (%s)", c_deleted = "메시지를 삭제했습니다", c_import = "가져오기: ", c_saved = "설정이 '%s'(으)로 저장되었습니다", c_invalid = "올바르지 않은 설정입니다", c_nofirebase = "Firebase URL이 설정되지 않았습니다", c_wait = "다시 보내기 전에 잠시 기다려 주세요", c_noreq = "사용 중인 executor가 request를 지원하지 않습니다", c_sendfail = "메시지 전송 실패 (%s)", c_share = "설정 공유", c_cfgread = "설정을 읽을 수 없습니다", c_sharefail = "설정 공유 실패 (%s)", c_shared = "설정 '%s'을(를) 공유했습니다", c_none = "저장된 설정이 아직 없습니다", c_sharing = "설정 공유 중: " },
-	de = { c_connecting = "Verbinde...", c_nodb = "Datenbank nicht eingerichtet", c_online = "Online", c_online_n = "Online • %d Spieler", c_offline = "Offline, neuer Versuch...", c_notice = "Nachrichten werden täglich um 00:00 WIB automatisch gelöscht", c_empty = "Noch keine Nachrichten, starte den Chat!", c_empty_nodb = "Trage die Firebase-URL in guiconfig.ChatURL ein", c_placeholder = "Nachricht schreiben...", c_replying = "Antwort an", c_delfail = "Nachricht konnte nicht gelöscht werden (%s)", c_deleted = "Nachricht gelöscht", c_import = "Import: ", c_saved = "Config als '%s' gespeichert", c_invalid = "Ungültige Config", c_nofirebase = "Firebase-URL nicht eingerichtet", c_wait = "Warte kurz, bevor du erneut sendest", c_noreq = "Dein Executor unterstützt keine Requests", c_sendfail = "Nachricht konnte nicht gesendet werden (%s)", c_share = "Config teilen", c_cfgread = "Config konnte nicht gelesen werden", c_sharefail = "Config konnte nicht geteilt werden (%s)", c_shared = "Config '%s' geteilt", c_none = "Noch keine Configs gespeichert", c_sharing = "Teile Config: " },
+	en = { c_connecting = "Connecting...", c_nodb = "Database not set", c_online = "Online", c_online_n = "Online • %d players", c_offline = "Offline, retrying...", c_notice = "Messages are deleted automatically every 00:00 WIB", c_empty = "No messages yet, start the chat!", c_empty_nodb = "Set guiconfig.ChatURL to your Firebase URL", c_placeholder = "Write a message...", c_replying = "Replying to", c_delfail = "Failed to delete message (%s)", c_deleted = "Message deleted", c_import = "Import: ", c_saved = "Config saved as '%s'", c_invalid = "Invalid config", c_nofirebase = "Firebase URL is not set", c_wait = "Wait a moment before sending again", c_noreq = "Your executor does not support requests", c_sendfail = "Failed to send message (%s)", c_share = "Share Config", c_cfgread = "Config could not be read", c_sharefail = "Failed to share config (%s)", c_shared = "Config '%s' shared", c_none = "No saved configs yet", c_sharing = "Sharing config: ", c_translating = "Translating...", c_transfail = "Translation failed (%s)", c_transsame = "Message is already in your language" },
+	id = { c_connecting = "Menghubungkan...", c_nodb = "Database belum diatur", c_online = "Online", c_online_n = "Online • %d pemain", c_offline = "Offline, mencoba lagi...", c_notice = "Pesan terhapus otomatis tiap 00:00 WIB", c_empty = "Belum ada pesan, mulai chat duluan!", c_empty_nodb = "Isi guiconfig.ChatURL dengan URL Firebase", c_placeholder = "Tulis pesan...", c_replying = "Membalas", c_delfail = "Gagal hapus pesan (%s)", c_deleted = "Pesan dihapus", c_import = "Import: ", c_saved = "Config disimpan sebagai '%s'", c_invalid = "Config tidak valid", c_nofirebase = "Firebase URL belum diatur", c_wait = "Tunggu sebentar sebelum kirim lagi", c_noreq = "Executor kamu tidak mendukung request", c_sendfail = "Gagal kirim pesan (%s)", c_share = "Bagikan Config", c_cfgread = "Config tidak bisa dibaca", c_sharefail = "Gagal membagikan config (%s)", c_shared = "Config '%s' dibagikan", c_none = "Belum ada config tersimpan", c_sharing = "Membagikan config: ", c_translating = "Menerjemahkan...", c_transfail = "Gagal menerjemahkan (%s)", c_transsame = "Pesan sudah dalam bahasamu" },
+	ms = { c_connecting = "Menyambung...", c_nodb = "Pangkalan data belum ditetapkan", c_online = "Dalam talian", c_online_n = "Dalam talian • %d pemain", c_offline = "Luar talian, mencuba semula...", c_notice = "Mesej dipadam secara automatik setiap 00:00 WIB", c_empty = "Belum ada mesej, mulakan sembang dahulu!", c_empty_nodb = "Tetapkan guiconfig.ChatURL kepada URL Firebase anda", c_placeholder = "Tulis mesej...", c_replying = "Membalas", c_delfail = "Gagal memadam mesej (%s)", c_deleted = "Mesej dipadam", c_import = "Import: ", c_saved = "Config disimpan sebagai '%s'", c_invalid = "Config tidak sah", c_nofirebase = "URL Firebase belum ditetapkan", c_wait = "Tunggu sebentar sebelum menghantar lagi", c_noreq = "Executor anda tidak menyokong request", c_sendfail = "Gagal menghantar mesej (%s)", c_share = "Kongsi Config", c_cfgread = "Config tidak dapat dibaca", c_sharefail = "Gagal berkongsi config (%s)", c_shared = "Config '%s' dikongsi", c_none = "Belum ada config disimpan", c_sharing = "Berkongsi config: ", c_translating = "Menterjemah...", c_transfail = "Gagal menterjemah (%s)", c_transsame = "Mesej sudah dalam bahasa anda" },
+	tr = { c_connecting = "Bağlanıyor...", c_nodb = "Veritabanı ayarlanmadı", c_online = "Çevrimiçi", c_online_n = "Çevrimiçi • %d oyuncu", c_offline = "Çevrimdışı, yeniden deneniyor...", c_notice = "Mesajlar her gün 00:00 WIB'de otomatik silinir", c_empty = "Henüz mesaj yok, sohbeti sen başlat!", c_empty_nodb = "guiconfig.ChatURL'yi Firebase URL'nle doldur", c_placeholder = "Mesaj yaz...", c_replying = "Yanıtlanıyor:", c_delfail = "Mesaj silinemedi (%s)", c_deleted = "Mesaj silindi", c_import = "İçe aktar: ", c_saved = "Config '%s' olarak kaydedildi", c_invalid = "Geçersiz config", c_nofirebase = "Firebase URL'si ayarlanmadı", c_wait = "Tekrar göndermeden önce biraz bekle", c_noreq = "Executor'ın request desteklemiyor", c_sendfail = "Mesaj gönderilemedi (%s)", c_share = "Config Paylaş", c_cfgread = "Config okunamadı", c_sharefail = "Config paylaşılamadı (%s)", c_shared = "'%s' config'i paylaşıldı", c_none = "Henüz kayıtlı config yok", c_sharing = "Config paylaşılıyor: ", c_translating = "Çevriliyor...", c_transfail = "Çeviri başarısız (%s)", c_transsame = "Mesaj zaten senin dilinde" },
+	pt = { c_connecting = "Conectando...", c_nodb = "Banco de dados não configurado", c_online = "Online", c_online_n = "Online • %d jogadores", c_offline = "Offline, tentando de novo...", c_notice = "As mensagens são apagadas automaticamente às 00:00 WIB", c_empty = "Ainda não há mensagens, comece o chat!", c_empty_nodb = "Defina guiconfig.ChatURL com a URL do Firebase", c_placeholder = "Escreva uma mensagem...", c_replying = "Respondendo a", c_delfail = "Falha ao apagar a mensagem (%s)", c_deleted = "Mensagem apagada", c_import = "Importar: ", c_saved = "Config salva como '%s'", c_invalid = "Config inválida", c_nofirebase = "URL do Firebase não configurada", c_wait = "Aguarde um pouco antes de enviar de novo", c_noreq = "Seu executor não suporta requisições", c_sendfail = "Falha ao enviar a mensagem (%s)", c_share = "Compartilhar Config", c_cfgread = "Não foi possível ler a config", c_sharefail = "Falha ao compartilhar a config (%s)", c_shared = "Config '%s' compartilhada", c_none = "Nenhuma config salva ainda", c_sharing = "Compartilhando config: ", c_translating = "Traduzindo...", c_transfail = "Falha na tradução (%s)", c_transsame = "A mensagem já está no seu idioma" },
+	es = { c_connecting = "Conectando...", c_nodb = "Base de datos sin configurar", c_online = "En línea", c_online_n = "En línea • %d jugadores", c_offline = "Sin conexión, reintentando...", c_notice = "Los mensajes se borran automáticamente a las 00:00 WIB", c_empty = "Aún no hay mensajes, ¡empieza el chat!", c_empty_nodb = "Rellena guiconfig.ChatURL con la URL de Firebase", c_placeholder = "Escribe un mensaje...", c_replying = "Respondiendo a", c_delfail = "No se pudo borrar el mensaje (%s)", c_deleted = "Mensaje borrado", c_import = "Importar: ", c_saved = "Config guardada como '%s'", c_invalid = "Config no válida", c_nofirebase = "URL de Firebase sin configurar", c_wait = "Espera un momento antes de volver a enviar", c_noreq = "Tu executor no admite requests", c_sendfail = "No se pudo enviar el mensaje (%s)", c_share = "Compartir Config", c_cfgread = "No se pudo leer la config", c_sharefail = "No se pudo compartir la config (%s)", c_shared = "Config '%s' compartida", c_none = "Aún no hay configs guardadas", c_sharing = "Compartiendo config: ", c_translating = "Traduciendo...", c_transfail = "Error al traducir (%s)", c_transsame = "El mensaje ya está en tu idioma" },
+	vi = { c_connecting = "Đang kết nối...", c_nodb = "Chưa thiết lập cơ sở dữ liệu", c_online = "Trực tuyến", c_online_n = "Trực tuyến • %d người chơi", c_offline = "Ngoại tuyến, đang thử lại...", c_notice = "Tin nhắn tự động xóa lúc 00:00 WIB mỗi ngày", c_empty = "Chưa có tin nhắn, hãy bắt đầu trò chuyện!", c_empty_nodb = "Điền URL Firebase vào guiconfig.ChatURL", c_placeholder = "Nhập tin nhắn...", c_replying = "Trả lời", c_delfail = "Xóa tin nhắn thất bại (%s)", c_deleted = "Đã xóa tin nhắn", c_import = "Nhập: ", c_saved = "Đã lưu config với tên '%s'", c_invalid = "Config không hợp lệ", c_nofirebase = "Chưa thiết lập URL Firebase", c_wait = "Vui lòng đợi một chút trước khi gửi lại", c_noreq = "Executor của bạn không hỗ trợ request", c_sendfail = "Gửi tin nhắn thất bại (%s)", c_share = "Chia sẻ Config", c_cfgread = "Không đọc được config", c_sharefail = "Chia sẻ config thất bại (%s)", c_shared = "Đã chia sẻ config '%s'", c_none = "Chưa có config nào được lưu", c_sharing = "Đang chia sẻ config: ", c_translating = "Đang dịch...", c_transfail = "Dịch thất bại (%s)", c_transsame = "Tin nhắn đã bằng ngôn ngữ của bạn" },
+	ru = { c_connecting = "Подключение...", c_nodb = "База данных не настроена", c_online = "В сети", c_online_n = "В сети • игроков: %d", c_offline = "Не в сети, повторная попытка...", c_notice = "Сообщения удаляются автоматически каждый день в 00:00 WIB", c_empty = "Сообщений пока нет, начните чат!", c_empty_nodb = "Укажите URL Firebase в guiconfig.ChatURL", c_placeholder = "Напишите сообщение...", c_replying = "Ответ для", c_delfail = "Не удалось удалить сообщение (%s)", c_deleted = "Сообщение удалено", c_import = "Импорт: ", c_saved = "Конфиг сохранён как '%s'", c_invalid = "Недопустимый конфиг", c_nofirebase = "URL Firebase не настроен", c_wait = "Подождите немного перед повторной отправкой", c_noreq = "Ваш executor не поддерживает request", c_sendfail = "Не удалось отправить сообщение (%s)", c_share = "Поделиться конфигом", c_cfgread = "Не удалось прочитать конфиг", c_sharefail = "Не удалось поделиться конфигом (%s)", c_shared = "Конфиг '%s' отправлен", c_none = "Сохранённых конфигов пока нет", c_sharing = "Делюсь конфигом: ", c_translating = "Перевод...", c_transfail = "Не удалось перевести (%s)", c_transsame = "Сообщение уже на вашем языке" },
+	ko = { c_connecting = "연결 중...", c_nodb = "데이터베이스가 설정되지 않았습니다", c_online = "온라인", c_online_n = "온라인 • 플레이어 %d명", c_offline = "오프라인, 다시 시도 중...", c_notice = "메시지는 매일 00:00 WIB에 자동 삭제됩니다", c_empty = "아직 메시지가 없어요, 먼저 채팅을 시작해 보세요!", c_empty_nodb = "guiconfig.ChatURL에 Firebase URL을 입력하세요", c_placeholder = "메시지를 입력하세요...", c_replying = "답장 대상", c_delfail = "메시지 삭제 실패 (%s)", c_deleted = "메시지를 삭제했습니다", c_import = "가져오기: ", c_saved = "설정이 '%s'(으)로 저장되었습니다", c_invalid = "올바르지 않은 설정입니다", c_nofirebase = "Firebase URL이 설정되지 않았습니다", c_wait = "다시 보내기 전에 잠시 기다려 주세요", c_noreq = "사용 중인 executor가 request를 지원하지 않습니다", c_sendfail = "메시지 전송 실패 (%s)", c_share = "설정 공유", c_cfgread = "설정을 읽을 수 없습니다", c_sharefail = "설정 공유 실패 (%s)", c_shared = "설정 '%s'을(를) 공유했습니다", c_none = "저장된 설정이 아직 없습니다", c_sharing = "설정 공유 중: ", c_translating = "번역 중...", c_transfail = "번역 실패 (%s)", c_transsame = "이미 내 언어로 된 메시지입니다" },
+	de = { c_connecting = "Verbinde...", c_nodb = "Datenbank nicht eingerichtet", c_online = "Online", c_online_n = "Online • %d Spieler", c_offline = "Offline, neuer Versuch...", c_notice = "Nachrichten werden täglich um 00:00 WIB automatisch gelöscht", c_empty = "Noch keine Nachrichten, starte den Chat!", c_empty_nodb = "Trage die Firebase-URL in guiconfig.ChatURL ein", c_placeholder = "Nachricht schreiben...", c_replying = "Antwort an", c_delfail = "Nachricht konnte nicht gelöscht werden (%s)", c_deleted = "Nachricht gelöscht", c_import = "Import: ", c_saved = "Config als '%s' gespeichert", c_invalid = "Ungültige Config", c_nofirebase = "Firebase-URL nicht eingerichtet", c_wait = "Warte kurz, bevor du erneut sendest", c_noreq = "Dein Executor unterstützt keine Requests", c_sendfail = "Nachricht konnte nicht gesendet werden (%s)", c_share = "Config teilen", c_cfgread = "Config konnte nicht gelesen werden", c_sharefail = "Config konnte nicht geteilt werden (%s)", c_shared = "Config '%s' geteilt", c_none = "Noch keine Configs gespeichert", c_sharing = "Teile Config: ", c_translating = "Übersetze...", c_transfail = "Übersetzung fehlgeschlagen (%s)", c_transsame = "Nachricht ist bereits in deiner Sprache" },
 }
 for code, pack in pairs(CHATSTR) do
 	local target = LIBSTR[code]
@@ -8916,6 +8916,54 @@ function Chloex:Window(guiconfig)
 				local C_MINE_SUB = Color3.fromRGB(86, 86, 94)
 				local C_LINE = Color3.fromRGB(30, 30, 34)
 				local httpreq = request or http_request or (syn and syn.request) or (fluxus and fluxus.request)
+
+				-- Terjemahan pesan (MyMemory, bahasa asal dideteksi otomatis -> bahasa script)
+				local TRANS_LANG = { en = "en", id = "id", ms = "ms", tr = "tr", pt = "pt-BR", es = "es", vi = "vi", ru = "ru", ko = "ko", de = "de" }
+				local transcache = {}
+				local function decodeentities(str)
+					str = str:gsub("&#(%d+);", function(n)
+						local ok, ch = pcall(utf8.char, tonumber(n))
+						return ok and ch or ""
+					end)
+					str = str:gsub("&quot;", '"'):gsub("&lt;", "<"):gsub("&gt;", ">"):gsub("&amp;", "&")
+					return str
+				end
+				local function translate(text, done)
+					local target = TRANS_LANG[libLang] or "en"
+					local key = target .. "|" .. text
+					if transcache[key] then
+						done(transcache[key])
+						return
+					end
+					if not httpreq then
+						done(nil, "request")
+						return
+					end
+					task.spawn(function()
+						local url = "https://api.mymemory.translated.net/get?q=" .. sv.http:UrlEncode(text) .. "&langpair=Autodetect%7C" .. target
+						local ok, res = pcall(httpreq, { Url = url, Method = "GET" })
+						local code = ok and type(res) == "table" and (res.StatusCode or 0) or 0
+						if code ~= 200 then
+							done(nil, code)
+							return
+						end
+						local okj, data = pcall(function()
+							return sv.http:JSONDecode(res.Body)
+						end)
+						if not okj or type(data) ~= "table" or tonumber(data.responseStatus) ~= 200 then
+							done(nil, okj and type(data) == "table" and data.responseStatus or "json")
+							return
+						end
+						local out = type(data.responseData) == "table" and data.responseData.translatedText
+						if type(out) ~= "string" or out == "" then
+							done(nil, "empty")
+							return
+						end
+						out = decodeentities(out)
+						transcache[key] = out
+						done(out)
+					end)
+				end
 				local TOKFILE = "Nonimus/chat_tokens.json"
 				local tokens = {}
 				pcall(function()
@@ -9583,8 +9631,52 @@ function Chloex:Window(guiconfig)
 					actionbtn(1, "reply", function()
 						setreply(m, uid)
 					end)
+					if not (type(m.cd) == "string" and m.cd ~= "") then
+						local translabel, translating = nil, false
+						actionbtn(2, "languages", function()
+							if translabel then
+								translabel.Visible = not translabel.Visible
+								return
+							end
+							if translating then
+								return
+							end
+							translating = true
+							local original = tostring(m.text or ""):sub(1, 200)
+							chloex(T("c_translating"), 1.5, theme.Dim)
+							translate(original, function(out, err)
+								translating = false
+								if not out then
+									chloex(string.format(T("c_transfail"), tostring(err or "?")), 3, theme.Bad)
+									return
+								end
+								if string.lower(out) == string.lower(original) then
+									chloex(T("c_transsame"), 2.5, theme.Dim)
+									return
+								end
+								if not bubble.Parent then
+									return
+								end
+								translabel = instance.textlabel(bubble)
+								translabel.Name = "Translation"
+								translabel.LayoutOrder = 5
+								translabel.BackgroundTransparency = 1
+								translabel.FontFace = CF
+								translabel.RichText = true
+								translabel.TextWrapped = true
+								translabel.TextSize = 13
+								translabel.TextColor3 = mine and C_MINE_SUB or theme.SubText
+								translabel.TextXAlignment = Enum.TextXAlignment.Left
+								translabel.AutomaticSize = Enum.AutomaticSize.XY
+								translabel.Size = UDim2.new(0, 0, 0, 0)
+								translabel.Text = "<i>" .. escaperich(out) .. "</i>"
+								local tc = instance.uisizeconstraint(translabel)
+								tc.MaxSize = Vector2.new(maxtextwidth(), math.huge)
+							end)
+						end)
+					end
 					if mine and tokens[id] then
-						actionbtn(2, "trash-2", function()
+						actionbtn(3, "trash-2", function()
 							deletemsg(id)
 						end)
 					end

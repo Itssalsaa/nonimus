@@ -1,3 +1,4 @@
+warn("[NONIMUS] lib build: wrap3-chat-share")
 local PIXEL_URL = "https://raw.githubusercontent.com/google/fonts/main/ofl/pressstart2p/PressStart2P-Regular.ttf"
 local PIXEL_CUSTOM = false
 local function loadpixelface()

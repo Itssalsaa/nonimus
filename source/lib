@@ -1226,6 +1226,44 @@ function config:loadexternal(json)
 	self:queuesave()
 	return true
 end
+function config:readshared(name)
+	name = tostring(name or "")
+	local found = false
+	for _, n in ipairs(self:getlist()) do
+		if n == name then
+			found = true
+			break
+		end
+	end
+	if not found or not self.gamefolder then
+		return nil
+	end
+	local dec = tryread(self.gamefolder .. "/" .. name .. ".json", 2)
+	if not dec then
+		return nil
+	end
+	return safeencode(dec)
+end
+function config:importshared(name, json)
+	if not self:loadexternal(json) then
+		return nil
+	end
+	local base = sanitizename(name)
+	if base == "" then
+		base = "Shared"
+	end
+	local used = {}
+	for _, n in ipairs(self:getlist()) do
+		used[n] = true
+	end
+	local final, i = base, 1
+	while used[final] do
+		i = i + 1
+		final = base .. "_" .. i
+	end
+	self:save(final)
+	return final
+end
 function config:init(scope)
 	if hasfs and not isfolder(NONIMUS_ROOT) then
 		pcall(makefolder, NONIMUS_ROOT)
@@ -5290,15 +5328,16 @@ function Chloex:Window(guiconfig)
 			local sectiontitle = instance.textlabel(sectionreal)
 			sectiontitle.FontFace = FONT_BOLD
 			sectiontitle.Text = sectiontitletext
-			marqueeattach(sectiontitle, true)
 			sectiontitle.TextColor3 = theme.Text
 			sectiontitle.TextSize = ts(13)
-			sectiontitle.TextTruncate = Enum.TextTruncate.AtEnd
+			sectiontitle.TextTruncate = Enum.TextTruncate.None
+			sectiontitle.TextWrapped = true
 			sectiontitle.TextXAlignment = Enum.TextXAlignment.Left
 			sectiontitle.AnchorPoint = Vector2.new(0, 0.5)
 			sectiontitle.BackgroundTransparency = 1
 			sectiontitle.Position = UDim2.new(0, 10, 0.5, 0)
 			sectiontitle.Size = UDim2.new(1, -40, 0, 14)
+			sectiontitle.AutomaticSize = Enum.AutomaticSize.Y
 			if sectionicon and tostring(sectionicon) ~= "" then
 				local sectioniconimg = instance.imagelabel(sectionreal)
 				sectioniconimg.Name = "SectionIcon"
@@ -5310,6 +5349,7 @@ function Chloex:Window(guiconfig)
 				applyicon(sectioniconimg, sectionicon, 48)
 				sectiontitle.Position = UDim2.new(0, 34, 0.5, 0)
 				sectiontitle.Size = UDim2.new(1, -64, 0, 14)
+				sectiontitle.AutomaticSize = Enum.AutomaticSize.Y
 			end
 			local sectionadd = instance.frame(section)
 			sectionadd.AnchorPoint = Vector2.new(0.5, 0)
@@ -5389,6 +5429,25 @@ function Chloex:Window(guiconfig)
 				updatesizesection(false)
 			end
 			uilistlayout2:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(queueSectionResize)
+			if not noheader then
+				local function fitheader()
+					local lineh = sectiontitle.AbsoluteSize.Y / uistate.scale
+					local newheight = math.max(30, math.ceil(lineh) + 16)
+					if newheight == headerheight then
+						return
+					end
+					headerheight = newheight
+					sectionreal.Size = UDim2.new(1, 1, 0, headerheight)
+					sectionadd.Position = UDim2.new(0.5, 0, 0, headerheight)
+					if opensection then
+						updatesizesection(false)
+					else
+						section.Size = UDim2.new(1, 0, 0, headerheight)
+					end
+				end
+				sectiontitle:GetPropertyChangedSignal("AbsoluteSize"):Connect(fitheader)
+				task.defer(fitheader)
+			end
 			local items = {}
 			local countitem = 0
 			local currentSubSection = nil
@@ -8759,7 +8818,7 @@ function Chloex:Window(guiconfig)
 				pcall(function()
 					if type(isfile) == "function" and type(readfile) == "function" and isfile(TOKFILE) then
 						local d = sv.http:JSONDecode(readfile(TOKFILE))
-						local cutoff = os.time() - 172800
+						local cutoff = os.time() - 259200
 						for id, tk in pairs(d) do
 							local t = tonumber(tostring(id):match("^(%d+)_"))
 							if t and t >= cutoff and type(tk) == "string" then
@@ -8888,7 +8947,7 @@ function Chloex:Window(guiconfig)
 				buildtag.BackgroundTransparency = 0
 				buildtag.BorderSizePixel = 0
 				buildtag.FontFace = CF
-				buildtag.Text = "Beta"
+				buildtag.Text = "v1.0"
 				buildtag.TextSize = 10
 				buildtag.TextColor3 = theme.Dim
 				buildtag.AnchorPoint = Vector2.new(1, 0.5)
@@ -8997,8 +9056,8 @@ function Chloex:Window(guiconfig)
 				box.ClearTextOnFocus = false
 				box.ClipsDescendants = true
 				box.AnchorPoint = Vector2.new(0, 0.5)
-				box.Position = UDim2.new(0, 12, 0.5, 0)
-				box.Size = UDim2.new(1, -60, 0, 34)
+				box.Position = UDim2.new(0, 54, 0.5, 0)
+				box.Size = UDim2.new(1, -102, 0, 34)
 				instance.uicorner(box).CornerRadius = UDim.new(1, 0)
 				local boxpad = instance.uipadding(box)
 				boxpad.PaddingLeft = UDim.new(0, 16)
@@ -9040,17 +9099,6 @@ function Chloex:Window(guiconfig)
 				replybar.Position = UDim2.new(0, 0, 1, -INPUT_H)
 				replybar.Size = UDim2.new(1, 0, 0, 34)
 				replybar.Visible = false
-				local replyline = instance.frame(replybar)
-				replyline.BackgroundColor3 = C_LINE
-				replyline.BorderSizePixel = 0
-				replyline.Size = UDim2.new(1, 0, 0, 1)
-				local replyaccent = instance.frame(replybar)
-				replyaccent.BackgroundColor3 = theme.Accent
-				replyaccent.BorderSizePixel = 0
-				replyaccent.AnchorPoint = Vector2.new(0, 0.5)
-				replyaccent.Position = UDim2.new(0, 10, 0.5, 0)
-				replyaccent.Size = UDim2.new(0, 3, 0, 22)
-				instance.uicorner(replyaccent).CornerRadius = UDim.new(1, 0)
 				local replytext = instance.textlabel(replybar)
 				replytext.BackgroundTransparency = 1
 				replytext.FontFace = CF
@@ -9059,8 +9107,8 @@ function Chloex:Window(guiconfig)
 				replytext.TextColor3 = theme.SubText
 				replytext.TextXAlignment = Enum.TextXAlignment.Left
 				replytext.TextTruncate = Enum.TextTruncate.AtEnd
-				replytext.Position = UDim2.new(0, 20, 0, 1)
-				replytext.Size = UDim2.new(1, -56, 1, -1)
+				replytext.Position = UDim2.new(0, 12, 0, 1)
+				replytext.Size = UDim2.new(1, -48, 1, -1)
 				local replyclose = instance.textbutton(replybar)
 				replyclose.Text = ""
 				replyclose.AutoButtonColor = false
@@ -9090,9 +9138,10 @@ function Chloex:Window(guiconfig)
 					end
 					return name:sub(1, 2) .. string.rep("*", math.min(n - 3, 5)) .. name:sub(n)
 				end
+				local RESET_DAYS = 3
 				local function daystart()
 					local now = os.time() * 1000
-					return now - ((now + 25200000) % 86400000)
+					return now - ((now + 25200000) % (86400000 * RESET_DAYS))
 				end
 				local function namecolor(uid)
 					local h = ((uid * 2654435761) % 360) / 360
@@ -9189,7 +9238,7 @@ function Chloex:Window(guiconfig)
 							Url = DB .. "/.json",
 							Method = "PATCH",
 							Headers = hdr,
-							Body = '{"chat/' .. id .. '":null,"owners/' .. id .. '":null,"delreq/' .. id .. '":null}',
+							Body = '{"chat/' .. id .. '":null,"owners/' .. id .. '":null,"keys/' .. id .. '":null,"delreq/' .. id .. '":null}',
 						})
 						local c2 = ok2 and type(r2) == "table" and (r2.StatusCode or r2.status_code) or 0
 						if c2 ~= 200 then
@@ -9308,16 +9357,10 @@ function Chloex:Window(guiconfig)
 						q.BorderSizePixel = 0
 						instance.uicorner(q).CornerRadius = UDim.new(0, 10)
 						local qp = instance.uipadding(q)
-						qp.PaddingLeft = UDim.new(0, 14)
+						qp.PaddingLeft = UDim.new(0, 9)
 						qp.PaddingRight = UDim.new(0, 9)
 						qp.PaddingTop = UDim.new(0, 5)
 						qp.PaddingBottom = UDim.new(0, 5)
-						local qbar = instance.frame(q)
-						qbar.BackgroundColor3 = mine and C_MINE_SUB or namecolor(ru)
-						qbar.BorderSizePixel = 0
-						qbar.Position = UDim2.new(0, -8, 0, -1)
-						qbar.Size = UDim2.new(0, 3, 1, 2)
-						instance.uicorner(qbar).CornerRadius = UDim.new(1, 0)
 						local ql = instance.textlabel(q)
 						ql.BackgroundTransparency = 1
 						ql.FontFace = CF
@@ -9358,6 +9401,43 @@ function Chloex:Window(guiconfig)
 					)
 					local c = instance.uisizeconstraint(body)
 					c.MaxSize = Vector2.new(maxtextwidth(), math.huge)
+					if type(m.cd) == "string" and m.cd ~= "" then
+						local cfgname = tostring(m.cn or "Config"):sub(1, 24)
+						local imp = instance.textbutton(bubble)
+						imp.Name = "ImportConfig"
+						imp.LayoutOrder = 4
+						imp.AutoButtonColor = false
+						imp.AutomaticSize = Enum.AutomaticSize.X
+						imp.Size = UDim2.new(0, 0, 0, 28)
+						imp.BackgroundColor3 = mine and Color3.fromRGB(40, 40, 46) or Color3.fromRGB(70, 70, 80)
+						imp.BorderSizePixel = 0
+						imp.FontFace = CFB
+						imp.TextSize = 12
+						imp.TextColor3 = Color3.fromRGB(240, 240, 245)
+						imp.Text = "Import: " .. cfgname
+						instance.uicorner(imp).CornerRadius = UDim.new(0, 8)
+						local imppad = instance.uipadding(imp)
+						imppad.PaddingLeft = UDim.new(0, 10)
+						imppad.PaddingRight = UDim.new(0, 10)
+						local importing = false
+						imp.Activated:Connect(function()
+							if importing then
+								return
+							end
+							importing = true
+							local ok, final = pcall(function()
+								return config:importshared(cfgname, m.cd)
+							end)
+							if ok and final then
+								chloex("Config disimpan sebagai '" .. final .. "'", 3, theme.Good)
+							else
+								chloex("Config tidak valid", 3, theme.Bad)
+							end
+							task.delay(1, function()
+								importing = false
+							end)
+						end)
+					end
 					local actions = instance.frame(row)
 					actions.Name = "Actions"
 					actions.LayoutOrder = mine and 0 or 3
@@ -9580,6 +9660,7 @@ function Chloex:Window(guiconfig)
 						local payload = sv.http:JSONEncode({
 							["chat/" .. id] = entry,
 							["owners/" .. id] = token,
+							["keys/" .. id] = tostring(chatcfg.Key or ""),
 						})
 						local ok, res = pcall(httpreq, {
 							Url = DB .. "/.json",
@@ -9596,6 +9677,228 @@ function Chloex:Window(guiconfig)
 						tokens[id] = token
 						savetokens()
 						pcall(poll)
+					end)
+				end
+				-- tombol + (share config)
+				do
+					local plusbtn = instance.textbutton(inputbar)
+					plusbtn.Name = "PlusBtn"
+					plusbtn.Text = ""
+					plusbtn.AutoButtonColor = false
+					plusbtn.AnchorPoint = Vector2.new(0, 0.5)
+					plusbtn.Position = UDim2.new(0, 12, 0.5, 0)
+					plusbtn.Size = UDim2.new(0, 34, 0, 34)
+					plusbtn.BackgroundColor3 = Color3.fromRGB(44, 44, 50)
+					plusbtn.BorderSizePixel = 0
+					instance.uicorner(plusbtn).CornerRadius = UDim.new(1, 0)
+					local plusicon = instance.imagelabel(plusbtn)
+					plusicon.BackgroundTransparency = 1
+					plusicon.AnchorPoint = Vector2.new(0.5, 0.5)
+					plusicon.Position = UDim2.new(0.5, 0, 0.5, 0)
+					plusicon.Size = UDim2.new(0, 18, 0, 18)
+					plusicon.ImageColor3 = theme.Dim
+					applyicon(plusicon, "plus", 48)
+
+					local menu = instance.frame(panel)
+					menu.Name = "ShareMenu"
+					menu.ZIndex = 20
+					menu.Visible = false
+					menu.AnchorPoint = Vector2.new(0, 1)
+					menu.AutomaticSize = Enum.AutomaticSize.Y
+					menu.Size = UDim2.new(0, 210, 0, 0)
+					menu.BackgroundColor3 = Color3.fromRGB(24, 24, 28)
+					menu.BorderSizePixel = 0
+					instance.uicorner(menu).CornerRadius = UDim.new(0, 12)
+					local menustroke = instance.uistroke(menu)
+					menustroke.Color = Color3.fromRGB(70, 70, 80)
+					menustroke.Transparency = 0.4
+					menustroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+					local menupad = instance.uipadding(menu)
+					menupad.PaddingLeft = UDim.new(0, 6)
+					menupad.PaddingRight = UDim.new(0, 6)
+					menupad.PaddingTop = UDim.new(0, 6)
+					menupad.PaddingBottom = UDim.new(0, 6)
+					local menulayout = instance.uilistlayout(menu)
+					menulayout.Padding = UDim.new(0, 4)
+					menulayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+					local sharebtn = instance.textbutton(menu)
+					sharebtn.Name = "ShareConfig"
+					sharebtn.LayoutOrder = 1
+					sharebtn.Text = ""
+					sharebtn.AutoButtonColor = false
+					sharebtn.Size = UDim2.new(1, 0, 0, 34)
+					sharebtn.BackgroundColor3 = C_OTHER
+					sharebtn.BorderSizePixel = 0
+					instance.uicorner(sharebtn).CornerRadius = UDim.new(0, 8)
+					local shareicon = instance.imagelabel(sharebtn)
+					shareicon.BackgroundTransparency = 1
+					shareicon.AnchorPoint = Vector2.new(0, 0.5)
+					shareicon.Position = UDim2.new(0, 10, 0.5, 0)
+					shareicon.Size = UDim2.new(0, 16, 0, 16)
+					shareicon.ImageColor3 = theme.SubText
+					applyicon(shareicon, "share-2", 48)
+					local sharetext = instance.textlabel(sharebtn)
+					sharetext.BackgroundTransparency = 1
+					sharetext.FontFace = CFB
+					sharetext.Text = "Share Config"
+					sharetext.TextSize = 13
+					sharetext.TextColor3 = theme.Text
+					sharetext.TextXAlignment = Enum.TextXAlignment.Left
+					sharetext.Position = UDim2.new(0, 34, 0, 0)
+					sharetext.Size = UDim2.new(1, -58, 1, 0)
+					local sharearrow = instance.imagelabel(sharebtn)
+					sharearrow.BackgroundTransparency = 1
+					sharearrow.AnchorPoint = Vector2.new(1, 0.5)
+					sharearrow.Position = UDim2.new(1, -10, 0.5, 0)
+					sharearrow.Size = UDim2.new(0, 14, 0, 14)
+					sharearrow.ImageColor3 = theme.SubText
+					applyicon(sharearrow, "chevron-down", 48)
+
+					-- dropdown config (maks 4 baris, sisanya di-scroll)
+					local ROW_H, ROW_GAP, MAX_ROWS = 30, 3, 4
+					local cfglist = instance.scrollingframe(menu)
+					cfglist.Name = "ConfigList"
+					cfglist.LayoutOrder = 2
+					cfglist.Visible = false
+					cfglist.BackgroundTransparency = 1
+					cfglist.BorderSizePixel = 0
+					cfglist.Size = UDim2.new(1, 0, 0, 0)
+					cfglist.ScrollBarThickness = 3
+					cfglist.ScrollBarImageColor3 = Color3.fromRGB(120, 120, 128)
+					cfglist.VerticalScrollBarInset = Enum.ScrollBarInset.Always
+					cfglist.ElasticBehavior = Enum.ElasticBehavior.Never
+					cfglist.ScrollingDirection = Enum.ScrollingDirection.Y
+					cfglist.AutomaticCanvasSize = Enum.AutomaticSize.Y
+					cfglist.CanvasSize = UDim2.new(0, 0, 0, 0)
+					cfglist.Active = true
+					local cfglayout = instance.uilistlayout(cfglist)
+					cfglayout.Padding = UDim.new(0, ROW_GAP)
+					cfglayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+					local function closemenu()
+						menu.Visible = false
+						cfglist.Visible = false
+						sharearrow.Rotation = 0
+					end
+					local function sendconfig(name)
+						if not configured then
+							chloex("Firebase URL belum diatur", 3, theme.Bad)
+							return
+						end
+						if not httpreq then
+							chloex("Executor kamu tidak mendukung request", 3, theme.Bad)
+							return
+						end
+						if os.clock() - lastsend < 1.5 then
+							chloex("Tunggu sebentar sebelum kirim lagi", 2, theme.Bad)
+							return
+						end
+						local json = config:readshared(name)
+						if not json then
+							chloex("Config tidak bisa dibaca", 3, theme.Bad)
+							return
+						end
+						closemenu()
+						lastsend = os.clock()
+						task.spawn(function()
+							local g = (sv.http:GenerateGUID(false):gsub("[^%w]", ""))
+							local id = tostring(os.time()) .. "_" .. g:sub(1, 10)
+							local token = (sv.http:GenerateGUID(false):gsub("[^%w]", ""))
+							local payload = sv.http:JSONEncode({
+								["chat/" .. id] = {
+									uid = myuid,
+									name = mask(lp and lp.Name),
+									text = "Membagikan config: " .. name,
+									cn = name,
+									cd = json,
+									ts = { [".sv"] = "timestamp" },
+								},
+								["owners/" .. id] = token,
+								["keys/" .. id] = tostring(chatcfg.Key or ""),
+							})
+							local ok, res = pcall(httpreq, {
+								Url = DB .. "/.json",
+								Method = "PATCH",
+								Headers = { ["Content-Type"] = "application/json" },
+								Body = payload,
+							})
+							local code = ok and type(res) == "table" and (res.StatusCode or res.status_code) or 0
+							if code ~= 200 then
+								chloex("Gagal membagikan config (" .. tostring(code) .. ")", 3, theme.Bad)
+								return
+							end
+							tokens[id] = token
+							savetokens()
+							chloex("Config '" .. name .. "' dibagikan", 3, theme.Good)
+							pcall(poll)
+						end)
+					end
+					local function fillconfigs()
+						for _, ch in ipairs(cfglist:GetChildren()) do
+							if ch:IsA("GuiObject") then
+								ch:Destroy()
+							end
+						end
+						local names = config:getlist()
+						local rows = math.max(1, math.min(#names, MAX_ROWS))
+						cfglist.Size = UDim2.new(1, 0, 0, rows * ROW_H + (rows - 1) * ROW_GAP)
+						if #names == 0 then
+							local none = instance.textlabel(cfglist)
+							none.BackgroundTransparency = 1
+							none.FontFace = CF
+							none.Text = "Belum ada config tersimpan"
+							none.TextSize = 12
+							none.TextColor3 = theme.Dim
+							none.Size = UDim2.new(1, 0, 0, ROW_H)
+							return
+						end
+						for i, name in ipairs(names) do
+							local item = instance.textbutton(cfglist)
+							item.Name = "Cfg_" .. name
+							item.LayoutOrder = i
+							item.Text = ""
+							item.AutoButtonColor = false
+							item.Size = UDim2.new(1, -6, 0, ROW_H)
+							item.BackgroundColor3 = Color3.fromRGB(34, 34, 39)
+							item.BorderSizePixel = 0
+							instance.uicorner(item).CornerRadius = UDim.new(0, 8)
+							local itemtext = instance.textlabel(item)
+							itemtext.BackgroundTransparency = 1
+							itemtext.FontFace = CF
+							itemtext.Text = name
+							itemtext.TextSize = 12
+							itemtext.TextColor3 = theme.Text
+							itemtext.TextXAlignment = Enum.TextXAlignment.Left
+							itemtext.TextTruncate = Enum.TextTruncate.AtEnd
+							itemtext.Position = UDim2.new(0, 10, 0, 0)
+							itemtext.Size = UDim2.new(1, -20, 1, 0)
+							item.MouseEnter:Connect(function()
+								item.BackgroundColor3 = Color3.fromRGB(48, 48, 56)
+							end)
+							item.MouseLeave:Connect(function()
+								item.BackgroundColor3 = Color3.fromRGB(34, 34, 39)
+							end)
+							item.Activated:Connect(function()
+								sendconfig(name)
+							end)
+						end
+					end
+					sharebtn.Activated:Connect(function()
+						local open = not cfglist.Visible
+						if open then
+							fillconfigs()
+						end
+						cfglist.Visible = open
+						sharearrow.Rotation = open and 180 or 0
+					end)
+					plusbtn.Activated:Connect(function()
+						if menu.Visible then
+							closemenu()
+							return
+						end
+						menu.Position = UDim2.new(0, 12, 1, -INPUT_H - 6 - (replybar.Visible and 34 or 0))
+						menu.Visible = true
 					end)
 				end
 				sendbtn.Activated:Connect(function()
@@ -9660,7 +9963,7 @@ function Chloex:Window(guiconfig)
 						end
 					end
 				end
-				-- hapus pesan kemarin (aturan Firebase hanya mengizinkan hapus pesan sebelum 00:00 WIB)
+				-- hapus pesan periode sebelumnya (chat di-reset tiap 3 hari, batas periode jam 00:00 WIB)
 				local function cleanup()
 					if not httpreq then
 						return
@@ -9684,7 +9987,7 @@ function Chloex:Window(guiconfig)
 								Url = DB .. "/.json",
 								Method = "PATCH",
 								Headers = { ["Content-Type"] = "application/json" },
-								Body = '{"chat/' .. id .. '":null,"owners/' .. id .. '":null}',
+								Body = '{"chat/' .. id .. '":null,"owners/' .. id .. '":null,"keys/' .. id .. '":null}',
 							})
 						end
 						task.wait(0.15)
@@ -10026,6 +10329,7 @@ function Chloex:Window(guiconfig)
 			ChatSection:AddChatPanel({
 				URL = chatcfg.URL or guiconfig.ChatURL or "https://nonimuschat-global-default-rtdb.firebaseio.com",
 				Height = chatcfg.Height,
+				Key = chatcfg.Key or guiconfig.ChatKey,
 			})
 		end)
 		return ChatTab

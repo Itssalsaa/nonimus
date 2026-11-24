@@ -1,4 +1,4 @@
-warn("[NONIMUS] lib build: wrap3-chat-share")
+warn("[NONIMUS] lib build: wrap4")
 local PIXEL_URL = "https://raw.githubusercontent.com/google/fonts/main/ofl/pressstart2p/PressStart2P-Regular.ttf"
 local PIXEL_CUSTOM = false
 local function loadpixelface()
@@ -5433,6 +5433,25 @@ function Chloex:Window(guiconfig)
 			if not noheader then
 				local function fitheader()
 					local lineh = math.max(14, math.ceil(sectiontitle.TextBounds.Y / uistate.scale))
+					local availw = math.floor(sectionreal.AbsoluteSize.X / uistate.scale) + titlew
+					if availw > 20 then
+						local okm, measured = pcall(function()
+							local function bounds(text, width)
+								local prm = Instance.new("GetTextBoundsParams")
+								prm.Text = text
+								prm.Font = sectiontitle.FontFace
+								prm.Size = sectiontitle.TextSize
+								prm.Width = width
+								return sv.textservice:GetTextBoundsAsync(prm).Y
+							end
+							local one = math.max(1, bounds("A", 100000))
+							local lines = math.max(1, math.floor(bounds(sectiontitletext, availw) / one + 0.5))
+							return math.ceil(lines * one * (PIXEL_CUSTOM and PIXEL_LINEHEIGHT or 1))
+						end)
+						if okm and measured and measured > lineh then
+							lineh = measured
+						end
+					end
 					sectiontitle.Size = UDim2.new(1, titlew, 0, lineh)
 					local newheight = math.max(30, lineh + 16)
 					if newheight == headerheight then

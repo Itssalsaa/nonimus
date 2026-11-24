@@ -1551,16 +1551,16 @@ end
 local Chloex = {}
 -- ===== Teks antarmuka library (multi bahasa) =====
 local LIBSTR = {
-	en = { search = "Search", results = "Search Results", noresults = "No features found.", gsearch = "Search the guide...", gclear = "Clear", gempty = "No matching feature in the guide.", gcount = "%d of %d features" },
-	id = { search = "Cari", results = "Hasil Pencarian", noresults = "Fitur tidak ditemukan.", gsearch = "Cari di panduan...", gclear = "Hapus", gempty = "Tidak ada fitur yang cocok di panduan.", gcount = "%d dari %d fitur" },
-	ms = { search = "Cari", results = "Hasil Carian", noresults = "Tiada ciri ditemui.", gsearch = "Cari dalam panduan...", gclear = "Kosongkan", gempty = "Tiada ciri yang sepadan dalam panduan.", gcount = "%d daripada %d ciri" },
-	tr = { search = "Ara", results = "Arama Sonuçları", noresults = "Özellik bulunamadı.", gsearch = "Rehberde ara...", gclear = "Temizle", gempty = "Rehberde eşleşen özellik yok.", gcount = "%d / %d özellik" },
-	pt = { search = "Pesquisar", results = "Resultados da pesquisa", noresults = "Nenhum recurso encontrado.", gsearch = "Pesquisar no guia...", gclear = "Limpar", gempty = "Nenhum recurso correspondente no guia.", gcount = "%d de %d recursos" },
-	es = { search = "Buscar", results = "Resultados de búsqueda", noresults = "No se encontraron funciones.", gsearch = "Buscar en la guía...", gclear = "Borrar", gempty = "Ninguna función coincide en la guía.", gcount = "%d de %d funciones" },
-	vi = { search = "Tìm kiếm", results = "Kết quả tìm kiếm", noresults = "Không tìm thấy tính năng.", gsearch = "Tìm trong hướng dẫn...", gclear = "Xóa", gempty = "Không có tính năng phù hợp trong hướng dẫn.", gcount = "%d / %d tính năng" },
-	ru = { search = "Поиск", results = "Результаты поиска", noresults = "Функции не найдены.", gsearch = "Поиск по руководству...", gclear = "Очистить", gempty = "В руководстве нет подходящих функций.", gcount = "%d из %d функций" },
-	ko = { search = "검색", results = "검색 결과", noresults = "기능을 찾을 수 없습니다.", gsearch = "가이드에서 검색...", gclear = "지우기", gempty = "가이드에 일치하는 기능이 없습니다.", gcount = "%d / %d개 기능" },
-	de = { search = "Suchen", results = "Suchergebnisse", noresults = "Keine Funktionen gefunden.", gsearch = "Im Leitfaden suchen...", gclear = "Leeren", gempty = "Keine passende Funktion im Leitfaden.", gcount = "%d von %d Funktionen" },
+	en = { search = "Search", results = "Search Results", noresults = "No features found." },
+	id = { search = "Cari", results = "Hasil Pencarian", noresults = "Fitur tidak ditemukan." },
+	ms = { search = "Cari", results = "Hasil Carian", noresults = "Tiada ciri ditemui." },
+	tr = { search = "Ara", results = "Arama Sonuçları", noresults = "Özellik bulunamadı." },
+	pt = { search = "Pesquisar", results = "Resultados da pesquisa", noresults = "Nenhum recurso encontrado." },
+	es = { search = "Buscar", results = "Resultados de búsqueda", noresults = "No se encontraron funciones." },
+	vi = { search = "Tìm kiếm", results = "Kết quả tìm kiếm", noresults = "Không tìm thấy tính năng." },
+	ru = { search = "Поиск", results = "Результаты поиска", noresults = "Функции не найдены." },
+	ko = { search = "검색", results = "검색 결과", noresults = "기능을 찾을 수 없습니다." },
+	de = { search = "Suchen", results = "Suchergebnisse", noresults = "Keine Funktionen gefunden." },
 }
 local libLang = "en"
 local libLangListeners = {}
@@ -5532,24 +5532,6 @@ function Chloex:Window(guiconfig)
 			end
 			local items = {}
 			local countitem = 0
-			items.Frame = section
-			function items:SetVisible(state)
-				section.Visible = state ~= false
-				updatesizescroll()
-			end
-			function items:SetOpen(state, animate)
-				if state then
-					if not opensection then
-						opensection = true
-						updatesizesection(animate == true)
-					end
-				else
-					closesection(animate == true)
-				end
-			end
-			function items:IsOpen()
-				return opensection
-			end
 			local currentSubSection = nil
 			local buildStartTime = 0
 			local frameThreshold = 0.012
@@ -5674,127 +5656,10 @@ function Chloex:Window(guiconfig)
 					paragraphcontent.Text = content
 					updatesize()
 				end
-				function paragraphfunc:SetVisible(state)
-					paragraph.Visible = state ~= false
-				end
-				paragraphfunc.Frame = paragraph
-				-- NoSearch = true: paragraf tidak masuk hasil search reguler (dipakai tab Guide)
-				if paragraphconfig.NoSearch ~= true then
-					registerSearchItem(paragraphconfig.Title, paragraph, contenttext(paragraphconfig))
-				end
+				registerSearchItem(paragraphconfig.Title, paragraph, contenttext(paragraphconfig))
 				countitem = countitem + 1
 				yieldbuild()
 				return paragraphfunc
-			end
-			function items:AddSearchBox(searchcfg)
-				-- Kotak cari besar untuk tab Guide. Sengaja TIDAK didaftarkan ke search reguler.
-				searchcfg = searchcfg or {}
-				local boxfunc = { Value = "" }
-				local container = instance.frame(sectionadd)
-				container.Name = "GuideSearch"
-				container.BorderSizePixel = 0
-				container.LayoutOrder = countitem
-				container.Size = UDim2.new(1, 0, 0, 66)
-				roundbg(container, 6, theme.Row)
-				local clearbutton = instance.textbutton(container)
-				clearbutton.Name = "GuideSearchClear"
-				clearbutton.AnchorPoint = Vector2.new(1, 0)
-				clearbutton.Position = UDim2.new(1, -10, 0, 8)
-				clearbutton.Size = UDim2.new(0, 84, 0, 36)
-				clearbutton.FontFace = FONT_BOLD
-				clearbutton.TextSize = ts(12)
-				clearbutton.TextColor3 = theme.Text
-				clearbutton.TextTruncate = Enum.TextTruncate.AtEnd
-				clearbutton.Text = T("gclear")
-				hoverbg(clearbutton, roundbg(clearbutton, 6, theme.Inner), theme.Inner, theme.InnerHover)
-				local box = instance.textbox(container)
-				box.Name = "GuideSearchBox"
-				box.Position = UDim2.new(0, 10, 0, 8)
-				box.Size = UDim2.new(1, -104, 0, 36)
-				box.BackgroundColor3 = theme.Field
-				box.BackgroundTransparency = ELEMENT_ALPHA
-				box.BorderSizePixel = 0
-				box.FontFace = FONT_MEDIUM
-				box.PlaceholderText = searchcfg.Placeholder or T("gsearch")
-				box.PlaceholderColor3 = theme.Dim
-				box.Text = ""
-				box.TextColor3 = theme.Text
-				box.TextSize = ts(14)
-				box.TextXAlignment = Enum.TextXAlignment.Left
-				box.ClearTextOnFocus = false
-				box.ClipsDescendants = true
-				box.TextTruncate = Enum.TextTruncate.AtEnd
-				instance.uicorner(box).CornerRadius = UDim.new(0, 6)
-				local boxstroke = instance.uistroke(box)
-				boxstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-				boxstroke.Color = guiconfig.Color
-				boxstroke.Thickness = 1
-				boxstroke.Transparency = 0.7
-				local boxpad = instance.uipadding(box)
-				boxpad.PaddingLeft = UDim.new(0, 34)
-				boxpad.PaddingRight = UDim.new(0, 10)
-				local boxicon = instance.imagelabel(box)
-				boxicon.AnchorPoint = Vector2.new(0, 0.5)
-				boxicon.Position = UDim2.new(0, -25, 0.5, 0)
-				boxicon.Size = UDim2.new(0, 16, 0, 16)
-				boxicon.BackgroundTransparency = 1
-				boxicon.ImageColor3 = theme.Dim
-				applyicon(boxicon, "search", 48)
-				box.Focused:Connect(function()
-					sv.ts:Create(boxstroke, TweenInfo.new(0.12), { Transparency = 0.15 }):Play()
-				end)
-				box.FocusLost:Connect(function()
-					sv.ts:Create(boxstroke, TweenInfo.new(0.12), { Transparency = 0.7 }):Play()
-				end)
-				local status = instance.textlabel(container)
-				status.Name = "GuideSearchStatus"
-				status.FontFace = FONT_MEDIUM
-				status.Text = ""
-				status.TextColor3 = theme.Dim
-				status.TextSize = ts(11)
-				status.TextXAlignment = Enum.TextXAlignment.Left
-				status.TextTruncate = Enum.TextTruncate.AtEnd
-				status.BackgroundTransparency = 1
-				status.Position = UDim2.new(0, 12, 0, 48)
-				status.Size = UDim2.new(1, -24, 0, 14)
-				local function fire()
-					boxfunc.Value = box.Text
-					if typeof(searchcfg.Callback) == "function" then
-						elevate()
-						local ok, err = pcall(searchcfg.Callback, box.Text)
-						if not ok then
-							warn("SearchBox Callback error:", err)
-						end
-					end
-				end
-				local debouncekey = "guidesearch_" .. tostring(container)
-				box:GetPropertyChangedSignal("Text"):Connect(function()
-					debounceResize(debouncekey, fire, 0.08)
-				end)
-				clearbutton.Activated:Connect(function()
-					pcall(pesseffect, clearbutton)
-					box.Text = ""
-				end)
-				onLibLang(function()
-					if not box.Parent then
-						return
-					end
-					box.PlaceholderText = searchcfg.Placeholder or T("gsearch")
-					clearbutton.Text = T("gclear")
-				end)
-				function boxfunc:SetStatus(text)
-					status.Text = tostring(text or "")
-				end
-				function boxfunc:SetText(text)
-					box.Text = tostring(text or "")
-				end
-				function boxfunc:GetText()
-					return box.Text
-				end
-				boxfunc.Frame = container
-				countitem = countitem + 1
-				yieldbuild()
-				return boxfunc
 			end
 			function items:AddPanel(panelconfig)
 				panelconfig = panelconfig or {}

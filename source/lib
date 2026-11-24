@@ -5337,7 +5337,7 @@ function Chloex:Window(guiconfig)
 			sectiontitle.BackgroundTransparency = 1
 			sectiontitle.Position = UDim2.new(0, 10, 0.5, 0)
 			sectiontitle.Size = UDim2.new(1, -40, 0, 14)
-			sectiontitle.AutomaticSize = Enum.AutomaticSize.Y
+			local titlew = -40
 			if sectionicon and tostring(sectionicon) ~= "" then
 				local sectioniconimg = instance.imagelabel(sectionreal)
 				sectioniconimg.Name = "SectionIcon"
@@ -5349,7 +5349,7 @@ function Chloex:Window(guiconfig)
 				applyicon(sectioniconimg, sectionicon, 48)
 				sectiontitle.Position = UDim2.new(0, 34, 0.5, 0)
 				sectiontitle.Size = UDim2.new(1, -64, 0, 14)
-				sectiontitle.AutomaticSize = Enum.AutomaticSize.Y
+				titlew = -64
 			end
 			local sectionadd = instance.frame(section)
 			sectionadd.AnchorPoint = Vector2.new(0.5, 0)
@@ -5431,8 +5431,9 @@ function Chloex:Window(guiconfig)
 			uilistlayout2:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(queueSectionResize)
 			if not noheader then
 				local function fitheader()
-					local lineh = sectiontitle.AbsoluteSize.Y / uistate.scale
-					local newheight = math.max(30, math.ceil(lineh) + 16)
+					local lineh = math.max(14, math.ceil(sectiontitle.TextBounds.Y / uistate.scale))
+					sectiontitle.Size = UDim2.new(1, titlew, 0, lineh)
+					local newheight = math.max(30, lineh + 16)
 					if newheight == headerheight then
 						return
 					end
@@ -5445,7 +5446,9 @@ function Chloex:Window(guiconfig)
 						section.Size = UDim2.new(1, 0, 0, headerheight)
 					end
 				end
+				sectiontitle:GetPropertyChangedSignal("TextBounds"):Connect(fitheader)
 				sectiontitle:GetPropertyChangedSignal("AbsoluteSize"):Connect(fitheader)
+				sectionreal:GetPropertyChangedSignal("AbsoluteSize"):Connect(fitheader)
 				task.defer(fitheader)
 			end
 			local items = {}

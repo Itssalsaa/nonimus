@@ -1562,6 +1562,26 @@ local LIBSTR = {
 	ko = { search = "검색", results = "검색 결과", noresults = "기능을 찾을 수 없습니다." },
 	de = { search = "Suchen", results = "Suchergebnisse", noresults = "Keine Funktionen gefunden." },
 }
+local CHATSTR = {
+	en = { c_connecting = "Connecting...", c_nodb = "Database not set", c_online = "Online", c_online_n = "Online • %d players", c_offline = "Offline, retrying...", c_notice = "Messages are deleted automatically every 00:00 WIB", c_empty = "No messages yet, start the chat!", c_empty_nodb = "Set guiconfig.ChatURL to your Firebase URL", c_placeholder = "Write a message...", c_replying = "Replying to", c_delfail = "Failed to delete message (%s)", c_deleted = "Message deleted", c_import = "Import: ", c_saved = "Config saved as '%s'", c_invalid = "Invalid config", c_nofirebase = "Firebase URL is not set", c_wait = "Wait a moment before sending again", c_noreq = "Your executor does not support requests", c_sendfail = "Failed to send message (%s)", c_share = "Share Config", c_cfgread = "Config could not be read", c_sharefail = "Failed to share config (%s)", c_shared = "Config '%s' shared", c_none = "No saved configs yet", c_sharing = "Sharing config: " },
+	id = { c_connecting = "Menghubungkan...", c_nodb = "Database belum diatur", c_online = "Online", c_online_n = "Online • %d pemain", c_offline = "Offline, mencoba lagi...", c_notice = "Pesan terhapus otomatis tiap 00:00 WIB", c_empty = "Belum ada pesan, mulai chat duluan!", c_empty_nodb = "Isi guiconfig.ChatURL dengan URL Firebase", c_placeholder = "Tulis pesan...", c_replying = "Membalas", c_delfail = "Gagal hapus pesan (%s)", c_deleted = "Pesan dihapus", c_import = "Import: ", c_saved = "Config disimpan sebagai '%s'", c_invalid = "Config tidak valid", c_nofirebase = "Firebase URL belum diatur", c_wait = "Tunggu sebentar sebelum kirim lagi", c_noreq = "Executor kamu tidak mendukung request", c_sendfail = "Gagal kirim pesan (%s)", c_share = "Bagikan Config", c_cfgread = "Config tidak bisa dibaca", c_sharefail = "Gagal membagikan config (%s)", c_shared = "Config '%s' dibagikan", c_none = "Belum ada config tersimpan", c_sharing = "Membagikan config: " },
+	ms = { c_connecting = "Menyambung...", c_nodb = "Pangkalan data belum ditetapkan", c_online = "Dalam talian", c_online_n = "Dalam talian • %d pemain", c_offline = "Luar talian, mencuba semula...", c_notice = "Mesej dipadam secara automatik setiap 00:00 WIB", c_empty = "Belum ada mesej, mulakan sembang dahulu!", c_empty_nodb = "Tetapkan guiconfig.ChatURL kepada URL Firebase anda", c_placeholder = "Tulis mesej...", c_replying = "Membalas", c_delfail = "Gagal memadam mesej (%s)", c_deleted = "Mesej dipadam", c_import = "Import: ", c_saved = "Config disimpan sebagai '%s'", c_invalid = "Config tidak sah", c_nofirebase = "URL Firebase belum ditetapkan", c_wait = "Tunggu sebentar sebelum menghantar lagi", c_noreq = "Executor anda tidak menyokong request", c_sendfail = "Gagal menghantar mesej (%s)", c_share = "Kongsi Config", c_cfgread = "Config tidak dapat dibaca", c_sharefail = "Gagal berkongsi config (%s)", c_shared = "Config '%s' dikongsi", c_none = "Belum ada config disimpan", c_sharing = "Berkongsi config: " },
+	tr = { c_connecting = "Bağlanıyor...", c_nodb = "Veritabanı ayarlanmadı", c_online = "Çevrimiçi", c_online_n = "Çevrimiçi • %d oyuncu", c_offline = "Çevrimdışı, yeniden deneniyor...", c_notice = "Mesajlar her gün 00:00 WIB'de otomatik silinir", c_empty = "Henüz mesaj yok, sohbeti sen başlat!", c_empty_nodb = "guiconfig.ChatURL'yi Firebase URL'nle doldur", c_placeholder = "Mesaj yaz...", c_replying = "Yanıtlanıyor:", c_delfail = "Mesaj silinemedi (%s)", c_deleted = "Mesaj silindi", c_import = "İçe aktar: ", c_saved = "Config '%s' olarak kaydedildi", c_invalid = "Geçersiz config", c_nofirebase = "Firebase URL'si ayarlanmadı", c_wait = "Tekrar göndermeden önce biraz bekle", c_noreq = "Executor'ın request desteklemiyor", c_sendfail = "Mesaj gönderilemedi (%s)", c_share = "Config Paylaş", c_cfgread = "Config okunamadı", c_sharefail = "Config paylaşılamadı (%s)", c_shared = "'%s' config'i paylaşıldı", c_none = "Henüz kayıtlı config yok", c_sharing = "Config paylaşılıyor: " },
+	pt = { c_connecting = "Conectando...", c_nodb = "Banco de dados não configurado", c_online = "Online", c_online_n = "Online • %d jogadores", c_offline = "Offline, tentando de novo...", c_notice = "As mensagens são apagadas automaticamente às 00:00 WIB", c_empty = "Ainda não há mensagens, comece o chat!", c_empty_nodb = "Defina guiconfig.ChatURL com a URL do Firebase", c_placeholder = "Escreva uma mensagem...", c_replying = "Respondendo a", c_delfail = "Falha ao apagar a mensagem (%s)", c_deleted = "Mensagem apagada", c_import = "Importar: ", c_saved = "Config salva como '%s'", c_invalid = "Config inválida", c_nofirebase = "URL do Firebase não configurada", c_wait = "Aguarde um pouco antes de enviar de novo", c_noreq = "Seu executor não suporta requisições", c_sendfail = "Falha ao enviar a mensagem (%s)", c_share = "Compartilhar Config", c_cfgread = "Não foi possível ler a config", c_sharefail = "Falha ao compartilhar a config (%s)", c_shared = "Config '%s' compartilhada", c_none = "Nenhuma config salva ainda", c_sharing = "Compartilhando config: " },
+	es = { c_connecting = "Conectando...", c_nodb = "Base de datos sin configurar", c_online = "En línea", c_online_n = "En línea • %d jugadores", c_offline = "Sin conexión, reintentando...", c_notice = "Los mensajes se borran automáticamente a las 00:00 WIB", c_empty = "Aún no hay mensajes, ¡empieza el chat!", c_empty_nodb = "Rellena guiconfig.ChatURL con la URL de Firebase", c_placeholder = "Escribe un mensaje...", c_replying = "Respondiendo a", c_delfail = "No se pudo borrar el mensaje (%s)", c_deleted = "Mensaje borrado", c_import = "Importar: ", c_saved = "Config guardada como '%s'", c_invalid = "Config no válida", c_nofirebase = "URL de Firebase sin configurar", c_wait = "Espera un momento antes de volver a enviar", c_noreq = "Tu executor no admite requests", c_sendfail = "No se pudo enviar el mensaje (%s)", c_share = "Compartir Config", c_cfgread = "No se pudo leer la config", c_sharefail = "No se pudo compartir la config (%s)", c_shared = "Config '%s' compartida", c_none = "Aún no hay configs guardadas", c_sharing = "Compartiendo config: " },
+	vi = { c_connecting = "Đang kết nối...", c_nodb = "Chưa thiết lập cơ sở dữ liệu", c_online = "Trực tuyến", c_online_n = "Trực tuyến • %d người chơi", c_offline = "Ngoại tuyến, đang thử lại...", c_notice = "Tin nhắn tự động xóa lúc 00:00 WIB mỗi ngày", c_empty = "Chưa có tin nhắn, hãy bắt đầu trò chuyện!", c_empty_nodb = "Điền URL Firebase vào guiconfig.ChatURL", c_placeholder = "Nhập tin nhắn...", c_replying = "Trả lời", c_delfail = "Xóa tin nhắn thất bại (%s)", c_deleted = "Đã xóa tin nhắn", c_import = "Nhập: ", c_saved = "Đã lưu config với tên '%s'", c_invalid = "Config không hợp lệ", c_nofirebase = "Chưa thiết lập URL Firebase", c_wait = "Vui lòng đợi một chút trước khi gửi lại", c_noreq = "Executor của bạn không hỗ trợ request", c_sendfail = "Gửi tin nhắn thất bại (%s)", c_share = "Chia sẻ Config", c_cfgread = "Không đọc được config", c_sharefail = "Chia sẻ config thất bại (%s)", c_shared = "Đã chia sẻ config '%s'", c_none = "Chưa có config nào được lưu", c_sharing = "Đang chia sẻ config: " },
+	ru = { c_connecting = "Подключение...", c_nodb = "База данных не настроена", c_online = "В сети", c_online_n = "В сети • игроков: %d", c_offline = "Не в сети, повторная попытка...", c_notice = "Сообщения удаляются автоматически каждый день в 00:00 WIB", c_empty = "Сообщений пока нет, начните чат!", c_empty_nodb = "Укажите URL Firebase в guiconfig.ChatURL", c_placeholder = "Напишите сообщение...", c_replying = "Ответ для", c_delfail = "Не удалось удалить сообщение (%s)", c_deleted = "Сообщение удалено", c_import = "Импорт: ", c_saved = "Конфиг сохранён как '%s'", c_invalid = "Недопустимый конфиг", c_nofirebase = "URL Firebase не настроен", c_wait = "Подождите немного перед повторной отправкой", c_noreq = "Ваш executor не поддерживает request", c_sendfail = "Не удалось отправить сообщение (%s)", c_share = "Поделиться конфигом", c_cfgread = "Не удалось прочитать конфиг", c_sharefail = "Не удалось поделиться конфигом (%s)", c_shared = "Конфиг '%s' отправлен", c_none = "Сохранённых конфигов пока нет", c_sharing = "Делюсь конфигом: " },
+	ko = { c_connecting = "연결 중...", c_nodb = "데이터베이스가 설정되지 않았습니다", c_online = "온라인", c_online_n = "온라인 • 플레이어 %d명", c_offline = "오프라인, 다시 시도 중...", c_notice = "메시지는 매일 00:00 WIB에 자동 삭제됩니다", c_empty = "아직 메시지가 없어요, 먼저 채팅을 시작해 보세요!", c_empty_nodb = "guiconfig.ChatURL에 Firebase URL을 입력하세요", c_placeholder = "메시지를 입력하세요...", c_replying = "답장 대상", c_delfail = "메시지 삭제 실패 (%s)", c_deleted = "메시지를 삭제했습니다", c_import = "가져오기: ", c_saved = "설정이 '%s'(으)로 저장되었습니다", c_invalid = "올바르지 않은 설정입니다", c_nofirebase = "Firebase URL이 설정되지 않았습니다", c_wait = "다시 보내기 전에 잠시 기다려 주세요", c_noreq = "사용 중인 executor가 request를 지원하지 않습니다", c_sendfail = "메시지 전송 실패 (%s)", c_share = "설정 공유", c_cfgread = "설정을 읽을 수 없습니다", c_sharefail = "설정 공유 실패 (%s)", c_shared = "설정 '%s'을(를) 공유했습니다", c_none = "저장된 설정이 아직 없습니다", c_sharing = "설정 공유 중: " },
+	de = { c_connecting = "Verbinde...", c_nodb = "Datenbank nicht eingerichtet", c_online = "Online", c_online_n = "Online • %d Spieler", c_offline = "Offline, neuer Versuch...", c_notice = "Nachrichten werden täglich um 00:00 WIB automatisch gelöscht", c_empty = "Noch keine Nachrichten, starte den Chat!", c_empty_nodb = "Trage die Firebase-URL in guiconfig.ChatURL ein", c_placeholder = "Nachricht schreiben...", c_replying = "Antwort an", c_delfail = "Nachricht konnte nicht gelöscht werden (%s)", c_deleted = "Nachricht gelöscht", c_import = "Import: ", c_saved = "Config als '%s' gespeichert", c_invalid = "Ungültige Config", c_nofirebase = "Firebase-URL nicht eingerichtet", c_wait = "Warte kurz, bevor du erneut sendest", c_noreq = "Dein Executor unterstützt keine Requests", c_sendfail = "Nachricht konnte nicht gesendet werden (%s)", c_share = "Config teilen", c_cfgread = "Config konnte nicht gelesen werden", c_sharefail = "Config konnte nicht geteilt werden (%s)", c_shared = "Config '%s' geteilt", c_none = "Noch keine Configs gespeichert", c_sharing = "Teile Config: " },
+}
+for code, pack in pairs(CHATSTR) do
+	local target = LIBSTR[code]
+	if target then
+		for k, v in pairs(pack) do
+			target[k] = v
+		end
+	end
+end
 local libLang = "en"
 local libLangListeners = {}
 local function T(key)
@@ -9019,7 +9039,7 @@ function Chloex:Window(guiconfig)
 				local headstatus = instance.textlabel(header)
 				headstatus.BackgroundTransparency = 1
 				headstatus.FontFace = CF
-				headstatus.Text = configured and "Menghubungkan..." or "Database belum diatur"
+				headstatus.Text = configured and T("c_connecting") or T("c_nodb")
 				headstatus.TextSize = 11
 				headstatus.TextColor3 = theme.Dim
 				headstatus.TextXAlignment = Enum.TextXAlignment.Left
@@ -9047,8 +9067,8 @@ function Chloex:Window(guiconfig)
 						return
 					end
 					lastok = ok
-					headstatus.Text = ok and (onlinecount and string.format("Online • %d pemain", onlinecount) or "Online")
-						or "Offline, mencoba lagi..."
+					headstatus.Text = ok and (onlinecount and string.format(T("c_online_n"), onlinecount) or T("c_online"))
+						or T("c_offline")
 					headstatus.TextColor3 = ok and theme.SubText or theme.Dim
 					statusdot.BackgroundColor3 = ok and Color3.fromRGB(88, 214, 128) or theme.Dim
 				end
@@ -9088,7 +9108,7 @@ function Chloex:Window(guiconfig)
 				noticechip.BackgroundTransparency = 0.35
 				noticechip.BorderSizePixel = 0
 				noticechip.FontFace = CF
-				noticechip.Text = "Pesan terhapus otomatis tiap 00:00 WIB"
+				noticechip.Text = T("c_notice")
 				noticechip.TextSize = 10
 				noticechip.TextColor3 = theme.SubText
 				noticechip.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -9102,7 +9122,7 @@ function Chloex:Window(guiconfig)
 				local empty = instance.textlabel(panel)
 				empty.BackgroundTransparency = 1
 				empty.FontFace = CF
-				empty.Text = configured and "Belum ada pesan, mulai chat duluan!" or "Isi guiconfig.ChatURL dengan URL Firebase"
+				empty.Text = configured and T("c_empty") or T("c_empty_nodb")
 				empty.TextSize = 13
 				empty.TextColor3 = theme.Dim
 				empty.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -9127,7 +9147,7 @@ function Chloex:Window(guiconfig)
 				inputline.Size = UDim2.new(1, 0, 0, 1)
 				local box = instance.textbox(inputbar)
 				box.FontFace = CF
-				box.PlaceholderText = "Tulis pesan..."
+				box.PlaceholderText = T("c_placeholder")
 				box.PlaceholderColor3 = theme.Dim
 				box.Text = ""
 				box.TextSize = 13
@@ -9281,7 +9301,8 @@ function Chloex:Window(guiconfig)
 					end
 					replyto = { name = tostring(m.name or "?"):sub(1, 24), text = snip, uid = uid }
 					replytext.Text = string.format(
-						'Membalas <font color="%s"><b>%s</b></font>  %s',
+						'%s <font color="%s"><b>%s</b></font>  %s',
+						T("c_replying"),
 						rgbstr(namecolor(uid)),
 						escaperich(replyto.name),
 						escaperich(snip)
@@ -9314,7 +9335,7 @@ function Chloex:Window(guiconfig)
 						})
 						local c1 = ok1 and type(r1) == "table" and (r1.StatusCode or r1.status_code) or 0
 						if c1 ~= 200 then
-							chloex("Gagal hapus pesan (" .. tostring(c1) .. ")", 3, theme.Bad)
+							chloex(string.format(T("c_delfail"), tostring(c1)), 3, theme.Bad)
 							return
 						end
 						local ok2, r2 = pcall(httpreq, {
@@ -9325,7 +9346,7 @@ function Chloex:Window(guiconfig)
 						})
 						local c2 = ok2 and type(r2) == "table" and (r2.StatusCode or r2.status_code) or 0
 						if c2 ~= 200 then
-							chloex("Gagal hapus pesan (" .. tostring(c2) .. ")", 3, theme.Bad)
+							chloex(string.format(T("c_delfail"), tostring(c2)), 3, theme.Bad)
 							return
 						end
 						tokens[id] = nil
@@ -9335,7 +9356,7 @@ function Chloex:Window(guiconfig)
 							row:Destroy()
 							rowsbyid[id] = nil
 						end
-						chloex("Pesan dihapus", 2, theme.Good)
+						chloex(T("c_deleted"), 2, theme.Good)
 					end)
 				end
 				local function addmessage(id, m)
@@ -9476,9 +9497,13 @@ function Chloex:Window(guiconfig)
 					body.AutomaticSize = Enum.AutomaticSize.XY
 					body.Size = UDim2.new(0, 0, 0, 0)
 					local stamp = os.date("%H:%M", math.floor(mts / 1000))
+					local shownText = tostring(m.text or "")
+					if type(m.cd) == "string" and m.cd ~= "" and m.cn then
+						shownText = T("c_sharing") .. tostring(m.cn)
+					end
 					body.Text = string.format(
 						'%s\u{00A0}\u{00A0}\u{00A0}<font size="10" color="%s">%s</font>',
-						escaperich(tostring(m.text or ""):sub(1, 200)),
+						escaperich(shownText:sub(1, 200)),
 						mine and "rgb(96,96,104)" or "rgb(132,132,140)",
 						stamp
 					)
@@ -9497,7 +9522,7 @@ function Chloex:Window(guiconfig)
 						imp.FontFace = CFB
 						imp.TextSize = 12
 						imp.TextColor3 = Color3.fromRGB(240, 240, 245)
-						imp.Text = "Import: " .. cfgname
+						imp.Text = T("c_import") .. cfgname
 						instance.uicorner(imp).CornerRadius = UDim.new(0, 8)
 						local imppad = instance.uipadding(imp)
 						imppad.PaddingLeft = UDim.new(0, 10)
@@ -9512,9 +9537,9 @@ function Chloex:Window(guiconfig)
 								return config:importshared(cfgname, m.cd)
 							end)
 							if ok and final then
-								chloex("Config disimpan sebagai '" .. final .. "'", 3, theme.Good)
+								chloex(string.format(T("c_saved"), tostring(final)), 3, theme.Good)
 							else
-								chloex("Config tidak valid", 3, theme.Bad)
+								chloex(T("c_invalid"), 3, theme.Bad)
 							end
 							task.delay(1, function()
 								importing = false
@@ -9702,7 +9727,7 @@ function Chloex:Window(guiconfig)
 				local lastsend = 0
 				local function send()
 					if not configured then
-						chloex("Firebase URL belum diatur", 3, theme.Bad)
+						chloex(T("c_nofirebase"), 3, theme.Bad)
 						return
 					end
 					local text = box.Text:match("^%s*(.-)%s*$") or ""
@@ -9710,7 +9735,7 @@ function Chloex:Window(guiconfig)
 						return
 					end
 					if os.clock() - lastsend < 1.5 then
-						chloex("Tunggu sebentar sebelum kirim lagi", 2, theme.Bad)
+						chloex(T("c_wait"), 2, theme.Bad)
 						return
 					end
 					local len = utf8.len(text)
@@ -9718,7 +9743,7 @@ function Chloex:Window(guiconfig)
 						text = text:sub(1, utf8.offset(text, 201) - 1)
 					end
 					if not httpreq then
-						chloex("Executor kamu tidak mendukung request", 3, theme.Bad)
+						chloex(T("c_noreq"), 3, theme.Bad)
 						return
 					end
 					lastsend = os.clock()
@@ -9754,7 +9779,7 @@ function Chloex:Window(guiconfig)
 						local code = ok and type(res) == "table" and (res.StatusCode or res.status_code) or 0
 						if code ~= 200 then
 							box.Text = text
-							chloex("Gagal kirim pesan (" .. tostring(code) .. ")", 3, theme.Bad)
+							chloex(string.format(T("c_sendfail"), tostring(code)), 3, theme.Bad)
 							return
 						end
 						tokens[id] = token
@@ -9824,7 +9849,7 @@ function Chloex:Window(guiconfig)
 					local sharetext = instance.textlabel(sharebtn)
 					sharetext.BackgroundTransparency = 1
 					sharetext.FontFace = CFB
-					sharetext.Text = "Share Config"
+					sharetext.Text = T("c_share")
 					sharetext.TextSize = 13
 					sharetext.TextColor3 = theme.Text
 					sharetext.TextXAlignment = Enum.TextXAlignment.Left
@@ -9866,20 +9891,20 @@ function Chloex:Window(guiconfig)
 					end
 					local function sendconfig(name)
 						if not configured then
-							chloex("Firebase URL belum diatur", 3, theme.Bad)
+							chloex(T("c_nofirebase"), 3, theme.Bad)
 							return
 						end
 						if not httpreq then
-							chloex("Executor kamu tidak mendukung request", 3, theme.Bad)
+							chloex(T("c_noreq"), 3, theme.Bad)
 							return
 						end
 						if os.clock() - lastsend < 1.5 then
-							chloex("Tunggu sebentar sebelum kirim lagi", 2, theme.Bad)
+							chloex(T("c_wait"), 2, theme.Bad)
 							return
 						end
 						local json = config:readshared(name)
 						if not json then
-							chloex("Config tidak bisa dibaca", 3, theme.Bad)
+							chloex(T("c_cfgread"), 3, theme.Bad)
 							return
 						end
 						closemenu()
@@ -9908,12 +9933,12 @@ function Chloex:Window(guiconfig)
 							})
 							local code = ok and type(res) == "table" and (res.StatusCode or res.status_code) or 0
 							if code ~= 200 then
-								chloex("Gagal membagikan config (" .. tostring(code) .. ")", 3, theme.Bad)
+								chloex(string.format(T("c_sharefail"), tostring(code)), 3, theme.Bad)
 								return
 							end
 							tokens[id] = token
 							savetokens()
-							chloex("Config '" .. name .. "' dibagikan", 3, theme.Good)
+							chloex(string.format(T("c_shared"), tostring(name)), 3, theme.Good)
 							pcall(poll)
 						end)
 					end
@@ -9930,7 +9955,7 @@ function Chloex:Window(guiconfig)
 							local none = instance.textlabel(cfglist)
 							none.BackgroundTransparency = 1
 							none.FontFace = CF
-							none.Text = "Belum ada config tersimpan"
+							none.Text = T("c_none")
 							none.TextSize = 12
 							none.TextColor3 = theme.Dim
 							none.Size = UDim2.new(1, 0, 0, ROW_H)
@@ -10002,7 +10027,7 @@ function Chloex:Window(guiconfig)
 				local function updatecount(n)
 					onlinecount = n
 					if lastok then
-						headstatus.Text = string.format("Online • %d pemain", n)
+						headstatus.Text = string.format(T("c_online_n"), n)
 					end
 				end
 				local function countonline()
